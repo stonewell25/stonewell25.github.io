@@ -404,6 +404,32 @@
             document.getElementById('result-content').innerHTML = resultHTML;
         }
 
+        // 結果のダウンロードと送信
+        function downloadAndSubmitResults() {
+            const results = {
+                userId: generateUserId(), // ランダムなユーザーIDを生成
+                responses: responses,
+                riskRankings: rankings.map(index => index !== null ? images.indexOf(riskImages[index]) + 1 : null)
+            };
+            
+            // 結果をダウンロード
+            // const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results, null, 2));
+            // const downloadAnchorNode = document.createElement('a');
+            // downloadAnchorNode.setAttribute("href", dataStr);
+            // downloadAnchorNode.setAttribute("download", "risk_evaluation_results.json");
+            // document.body.appendChild(downloadAnchorNode);
+            // downloadAnchorNode.click();
+            // downloadAnchorNode.remove();
+            
+            // Google Apps Scriptにデータを送信
+            submitToGoogleSheet(results);
+        }
+        
+        // ランダムなユーザーIDを生成
+        function generateUserId() {
+            return 'user_' + Math.random().toString(36).substring(2, 15);
+        }
+
 
         // Google Apps Scriptにデータを送信
         function submitToGoogleSheet(data) {
