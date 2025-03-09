@@ -126,7 +126,7 @@
             margin: 10px 0;
             max-width: 100%;
         }
-        .drawing-controls {
+        .drawing- {
             margin-top: 10px;
             display: flex;
             justify-content: center;
@@ -182,13 +182,12 @@
                             <button class="btn btn-primary" onclick="confirmDrawing()">確定</button>
                         </div>
                     </div>
-
-                    <div id="risk-types" class="risk-types">
+                </div>
+                <div id="risk-types" class="risk-types">
                         <p>どのようなリスクを最も強く感じますか？</p>
                         <button class="btn btn-neutral" onclick="selectRiskType('切り傷')">切り傷</button>
                         <button class="btn btn-neutral" onclick="selectRiskType('火事')">火事</button>
                         <button class="btn btn-neutral" onclick="selectRiskType('転倒')">転倒</button>
-                    </div>
                 </div>
             </div>
             
@@ -475,7 +474,7 @@
             }
             
             // キャンバスの内容を画像データとして取得
-            const drawnImageData = canvas.toDataURL('image/png');
+            const drawnImageData = canvas.toDataURL('image/jpg');
             
             // リスクタイプ選択画面を表示
             document.getElementById('risk-drawing').style.display = 'none';
