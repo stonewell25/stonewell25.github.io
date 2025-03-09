@@ -581,10 +581,12 @@
 
 
         // Google Apps Scriptにデータを送信
+       // 結果の送信
         function submitToGoogleSheet(data) {
             // ここにGASのウェブアプリURLを入力
             const gasUrl = 'https://script.google.com/macros/s/AKfycbwkH4wu8auWBGGKv7sOCVPFs_l28zoTVVD7niGKpezIqSdG2bkzG1aB8IM__tYqG4JL/exec';
             
+            // 大きなデータを送信するため、timeoutを長めに設定
             fetch(gasUrl, {
                 method: 'POST',
                 mode: 'no-cors', // CORS制限を回避
@@ -592,41 +594,32 @@
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
-                // エラーハンドリングを追加
                 credentials: 'omit' // 認証情報を送信しない
             })
-             .then(response => {
+            .then(response => {
                 console.log('データ送信完了');
                 alert('結果が正常に送信されました。ご協力ありがとうございました。');
             })
             .catch(error => {
                 console.error('送信エラー:', error);
-                alert('結果の送信中にエラーが発生しました。ダウンロードしたJSONファイルを保存してください。');
+                alert('結果の送信中にエラーが発生しました。');
             });
         }
-
-                // 結果のダウンロードと送信
+        
+        // ダウンロードと送信を分離
         function downloadAndSubmitResults() {
             const results = {
-                userId: generateUserId(), // ランダムなユーザーIDを生成
+                userId: generateUserId(),
                 responses: responses,
                 riskRankings: rankings.map(index => index !== null ? images.indexOf(riskImages[index]) + 1 : null)
             };
             
-            // 結果をダウンロード
-            // const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results, null, 2));
-            // const downloadAnchorNode = document.createElement('a');
-            // downloadAnchorNode.setAttribute("href", dataStr);
-            // downloadAnchorNode.setAttribute("download", "risk_evaluation_results.json");
-            // document.body.appendChild(downloadAnchorNode);
-            // downloadAnchorNode.click();
-            // downloadAnchorNode.remove();
-            
             // Google Apps Scriptにデータを送信
             submitToGoogleSheet(results);
         }
-        
 
+
+        
     </script>
 </body>
 </html>
