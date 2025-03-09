@@ -316,7 +316,6 @@
         function selectRisk(hasRisk) {
             if (hasRisk) {
                document.getElementById('risk-types').style.display = 'block';
-                
             } else {
                 // リスクなしの場合は次の画像へ
                 responses.push({
@@ -324,6 +323,7 @@
                     hasRisk: false,
                     riskType: null,
                 });
+                nextImage();
                 // リスクタイプ選択画面を表示
                 document.getElementById('risk-drawing').style.display = 'none';
 
@@ -333,7 +333,7 @@
                         button.classList.remove('btn-selected', 'btn-unselected');
                     });
 
-                nextImage();
+                
             }
         }
 
