@@ -191,7 +191,7 @@
                         <button class="btn btn-neutral" onclick="selectRiskType('火事')">火事</button>
                         <button class="btn btn-neutral" onclick="selectRiskType('転倒')">転倒</button>
                     </div>
-<!--                     <div id="risk-drawing" class="risk-drawing" style="display: none;">
+                   <div id="risk-drawing" class="risk-drawing" style="display: none;">
                         <p>リスクを感じる部分を円で囲んでください。</p>
                         <div class="canvas-container">
                             <canvas id="drawing-canvas" style="border:1px solid #000; cursor: crosshair;"></canvas>
@@ -200,7 +200,7 @@
                             <button class="btn btn-secondary" onclick="clearDrawing()">クリア</button>
                             <button class="btn btn-primary" onclick="confirmDrawing()">確定</button>
                         </div>
-                    </div> -->
+                    </div> 
                 </div>
 
             </div>
@@ -316,9 +316,7 @@
         function selectRisk(hasRisk) {
             if (hasRisk) {
                document.getElementById('risk-types').style.display = 'block';
-                // リスクを感じる場合は描画画面を表示
-                //document.getElementById('risk-drawing').style.display = 'block';
-                //setupCanvas();
+                
             } else {
                 // リスクなしの場合は次の画像へ
                 responses.push({
@@ -354,7 +352,9 @@
                 // リスクを感じた画像を保存
                 riskImages.push(images[currentImageIndex]);
                 
-                nextImage();
+                // リスクを感じる場合は描画画面を表示
+                document.getElementById('risk-drawing').style.display = 'block';
+                setupCanvas();
                 
                 // ボタンのスタイルをリセット
                 buttons.forEach(button => {
@@ -534,6 +534,8 @@
                 imageData: drawnImageData,
                 path: currentPath
             };
+
+            nextImage();
         }
         
 
