@@ -530,14 +530,17 @@
             // キャンバスの内容を画像データとして取得
             const drawnImageData = canvas.toDataURL('image/jpg');
             
-            // リスクタイプ選択画面を表示
-            document.getElementById('risk-drawing').style.display = 'none';
+            
             
             // 描画データを一時保存
             window.tempDrawingData = {
                 imageData: drawnImageData,
                 path: currentPath
             };
+            nextImage();
+
+            // リスクタイプ選択画面を表示
+            document.getElementById('risk-drawing').style.display = 'none';
 
             // ボタンのスタイルをリセット
             buttons.forEach(button => {
@@ -545,7 +548,7 @@
                     button.classList.remove('btn-selected', 'btn-unselected');
                 });
 
-            nextImage();
+            
         }
         
 
