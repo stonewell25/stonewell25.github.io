@@ -266,7 +266,6 @@
             <h2>実験結果</h2>
             <p>ご協力ありがとうございました。以下があなたの回答です：</p>
             <div id="result-content"></div>
-            <button class="btn btn-primary" onclick="downloadAndSubmitResults()">結果を送信する</button>
                     <button class="btn btn-primary" onclick="downloadAndSubmitResults()">結果を送信する</button>
     <button class="btn btn-neutral" onclick="restartRanking()">ランキングをやり直す</button>
         </div>
@@ -477,7 +476,7 @@
                     });
             
                 // 少し遅延を入れて視覚効果を見せた後、次の画像へ
-            setTimeout(() => {
+            
                 responses.push({
                     imageUrl: images[currentImageIndex],
                     hasRisk: true,
@@ -489,11 +488,11 @@
 
                 // リスクを感じる場合は描画画面を表示
                 document.getElementById('risk-drawing').style.display = 'block';
-                setupCanvas(buttons);
+                setupCanvas();
 
                  
 
-            }, 500); // 500ミリ秒の遅延
+            }
         }
         
         // キャンバスのセットアップ
