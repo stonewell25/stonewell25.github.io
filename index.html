@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リスク評価実験</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .image-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 500px;
+            border: 1px solid #ddd;
+        }
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+        .risk-types {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .btn {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #f44336;
+            color: white;
+        }
+        .btn-neutral {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .progress {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+        }
+        .ranking-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .ranking-images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .ranking-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .ranking-image.selected {
+            border-color: #4CAF50;
+            transform: scale(1.05);
+        }
+        .results {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            width: 100%;
+        }
+        .password-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="password-screen" class="password-screen">
+        <h1>リスク評価実験</h1>
+        <p>この実験にアクセスするにはパスワードが必要です。</p>
+        <div>
+            <input type="password" id="password-input" placeholder="パスワードを入力">
+            <button class="btn btn-primary" onclick="checkPassword()">送信</button>
+        </div>
+    </div>
+
+    <div id="experiment-content" class="hidden">
+        <div class="container">
+            <h1>リスク評価実験</h1>
+            
+            <div id="instructions">
+                <h2>実験の手順</h2>
+                <p>1. 表示される20枚の画像を一枚ずつ評価します。</p>
+                <p>2. 各画像について、事故リスクを感じるかどうかを選択してください。</p>
+                <p>3. リスクを感じる場合は、「切り傷」「火事」「転倒」のうち最も強く感じるリスクを選択してください。</p>
+                <p>4. すべての画像を評価した後、リスクを感じた画像の中から最もリスクが高いと感じる上位3つを選択していただきます。</p>
+                <button class="btn btn-primary" onclick="startExperiment()">実験を開始する</button>
+            </div>
+            
+            <div id="experiment" style="display: none;">
+                <div class="progress">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0/20</div>
+                </div>
+                
+                <div class="image-container">
+                    <img id="current-image" src="" alt="評価画像">
+                </div>
+                
+                <div class="controls">
+                    <div>
+                        <p>この画像から事故リスクを感じますか？</p>
+                        <button class="btn btn-primary" onclick="selectRisk(true)">はい、リスクを感じる</button>
+                        <button class="btn btn-secondary" onclick="selectRisk(false)">いいえ、リスクを感じない</button>
+                    </div>
+                    
+                    <div id="risk-types" class="risk-types">
+                        <p>どのようなリスクを最も強く感じますか？</p>
+                        <button class="btn btn-neutral" onclick="selectRiskType('切り傷')">切り傷</button>
+                        <button class="btn btn-neutral" onclick="selectRiskType('火事')">火事</button>
+                        <button class="btn btn-neutral" onclick="selectRiskType('転倒')">転倒</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="ranking" class="ranking-container">
+                <h2>リスクランキング</h2>
+                <p>リスクを感じると評価した画像の中から、最もリスクが高いと感じる上位3つを順番に選択してください。</p>
+                <p>選択中: <span id="ranking-status">1位</span></p>
+                
+                <div id="ranking-images" class="ranking-images">
+                    <!-- リスクを感じた画像がここに表示されます -->
+                </div>
+                
+                <button id="complete-ranking" class="btn btn-primary" disabled>ランキングを確定する</button>
+            </div>
+            
+            <div id="results" class="results">
+                <h2>実験結果</h2>
+                <p>ご協力ありがとうございました。以下があなたの回答です：</p>
+                <div id="result-content"></div>
+                <button class="btn btn-primary" onclick="downloadResults()">結果をダウンロード</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 実験用の変数
+        const totalImages = 20;
+        let currentImageIndex = 0;
+        let images = [];
+        let responses = [];
+        let riskImages = [];
+        let rankings = [null, null, null];
+        let currentRankingPosition = 0;
+        
+        // パスワード確認
+        function checkPassword() {
+            const password = document.getElementById('password-input').value;
+            // 実際のパスワードに置き換えてください
+            if (password === "experiment2023") {
+                document.getElementById('password-screen').classList.add('hidden');
+                document.getElementById('experiment-content').classList.remove('hidden');
+            } else {
+                alert("パスワードが正しくありません。");
+            }
+        }
+        
+        // 実験開始
+        function startExperiment() {
+            document.getElementById('instructions').style.display = 'none';
+            document.getElementById('experiment').style.display = 'block';
+            
+            // 画像ファイル名の配列
+            const imageFilenames = [
+                'burn_0128.jpg',
+                'burn_174.jpg',
+                'cut_02.jpg',
+                'cut_139.jpg',
+                'cut_754.jpg',
+                'cut_1415.jpg',
+                'norisk_15.jpg',
+                'norisk_153.jpg',
+                'norisk_206.jpg',
+                'trip_06.jpg',
+                'trip_418.jpg',
+                'trip_421.jpg',
+                'trip_444.jpg'
+            ];
+                        
+            // 画像のURLを設定（実際の画像URLに置き換えてください）
+            for (let i = 0; i < imageFilenames.length; i++) {
+                images.push(`/home/senaishii-srd/evaluation/${imageFilenames[i]}`);
+            }
+            
+            // 画像をランダムに並び替え
+            shuffleArray(images);
+            
+            // 最初の画像を表示
+            showCurrentImage();
+        }
+        
+        // 配列をランダムに並び替える関数
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // 現在の画像を表示
+        function showCurrentImage() {
+            document.getElementById('current-image').src = images[currentImageIndex];
+            document.getElementById('progress-bar').style.width = `${(currentImageIndex / totalImages) * 100}%`;
+            document.getElementById('progress-bar').textContent = `${currentImageIndex + 1}/${totalImages}`;
+            document.getElementById('risk-types').style.display = 'none';
+        }
+        
+        // リスク選択
+        function selectRisk(hasRisk) {
+            if (hasRisk) {
+                document.getElementById('risk-types').style.display = 'block';
+            } else {
+                // リスクなしの場合は次の画像へ
+                responses.push({
+                    imageUrl: images[currentImageIndex],
+                    hasRisk: false,
+                    riskType: null
+                });
+                nextImage();
+            }
+        }
+        
+        // リスクタイプ選択
+        function selectRiskType(riskType) {
+            responses.push({
+                imageUrl: images[currentImageIndex],
+                hasRisk: true,
+                riskType: riskType
+            });
+            
+            // リスクを感じた画像を保存
+            riskImages.push(images[currentImageIndex]);
+            
+            nextImage();
+        }
+        
+        // 次の画像へ
+        function nextImage() {
+            currentImageIndex++;
+            
+            if (currentImageIndex < totalImages) {
+                showCurrentImage();
+            } else {
+                completeImageEvaluation();
+            }
+        }
+        
+        // 画像評価完了
+        function completeImageEvaluation() {
+            document.getElementById('experiment').style.display = 'none';
+            
+            // リスクを感じた画像が3つ以上ある場合のみランキングを実施
+            if (riskImages.length >= 3) {
+                document.getElementById('ranking').style.display = 'flex';
+                
+                // ランキング用の画像を表示
+                const rankingImagesContainer = document.getElementById('ranking-images');
+                rankingImagesContainer.innerHTML = '';
+                
+                riskImages.forEach((imageUrl, index) => {
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    img.classList.add('ranking-image');
+                    img.dataset.index = index;
+                    img.onclick = function() { selectRanking(this); };
+                    rankingImagesContainer.appendChild(img);
+                });
+            } else {
+                // リスクを感じた画像が3つ未満の場合は結果表示へ
+                showResults();
+            }
+        }
+        
+        // ランキング選択
+        function selectRanking(imgElement) {
+            const index = parseInt(imgElement.dataset.index);
+            
+            // 既に選択済みの場合は何もしない
+            if (rankings.includes(index)) return;
+            
+            // 現在の順位に画像を設定
+            rankings[currentRankingPosition] = index;
+            
+            // 選択状態を視覚的に表示
+            document.querySelectorAll('.ranking-image').forEach(img => {
+                if (parseInt(img.dataset.index) === index) {
+                    img.classList.add('selected');
+                    img.title = `${currentRankingPosition + 1}位`;
+                }
+            });
+            
+            // 次の順位へ
+            currentRankingPosition++;
+            
+            // ランキングステータスを更新
+            if (currentRankingPosition < 3) {
+                document.getElementById('ranking-status').textContent = `${currentRankingPosition + 1}位`;
+            } else {
+                document.getElementById('ranking-status').textContent = '選択完了';
+                document.getElementById('complete-ranking').disabled = false;
+            }
+        }
+        
+        // ランキング確定
+        document.getElementById('complete-ranking').addEventListener('click', function() {
+            showResults();
+        });
+        
+        // 結果表示
+        function showResults() {
+            document.getElementById('ranking').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            
+            // 結果をまとめる
+            let resultHTML = '<h3>画像評価結果:</h3><ul>';
+            
+            responses.forEach((response, index) => {
+                resultHTML += `<li>画像 ${index + 1}: ${response.hasRisk ? `リスクあり (${response.riskType})` : 'リスクなし'}</li>`;
+            });
+            
+            resultHTML += '</ul>';
+            
+            // ランキング結果
+            if (riskImages.length >= 3) {
+                resultHTML += '<h3>リスクランキング:</h3><ol>';
+                
+                rankings.forEach((imageIndex, rank) => {
+                    if (imageIndex !== null) {
+                        const originalIndex = images.indexOf(riskImages[imageIndex]);
+                        resultHTML += `<li>${originalIndex + 1}番目の画像</li>`;
+                    }
+                });
+                
+                resultHTML += '</ol>';
+            } else {
+                resultHTML += '<p>リスクを感じた画像が3つ未満のため、ランキングは実施されませんでした。</p>';
+            }
+            
+            document.getElementById('result-content').innerHTML = resultHTML;
+        }
+        
+        // 結果のダウンロード
+        function downloadResults() {
+            const results = {
+                imageEvaluations: responses,
+                riskRankings: rankings.map(index => index !== null ? images.indexOf(riskImages[index]) + 1 : null)
+            };
+            
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "risk_evaluation_results.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+    </script>
+</body>
+</html>
