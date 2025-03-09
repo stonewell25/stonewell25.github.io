@@ -452,13 +452,6 @@
                 nextImage();
                 // リスクタイプ選択画面を表示
                 document.getElementById('risk-drawing').style.display = 'none';
-
-                // ボタンのスタイルをリセット
-                buttons.forEach(button => {
-                        button.classList.add('btn-neutral');
-                        button.classList.remove('btn-selected', 'btn-unselected');
-                    });
-
                 
             }
         }
@@ -487,21 +480,17 @@
                 // リスクを感じた画像を保存
                 riskImages.push(images[currentImageIndex]);
 
-                // ボタンのスタイルをリセット
-                buttons.forEach(button => {
-                        button.classList.add('btn-neutral');
-                        button.classList.remove('btn-selected', 'btn-unselected');
-                    });
-        
                 // リスクを感じる場合は描画画面を表示
                 document.getElementById('risk-drawing').style.display = 'block';
-                setupCanvas();
+                setupCanvas(buttons);
+
+                 
 
             }, 500); // 500ミリ秒の遅延
         }
         
         // キャンバスのセットアップ
-        function setupCanvas() {
+        function setupCanvas(buttons) {
             
             const img = document.getElementById('current-image');
             canvas = document.getElementById('drawing-canvas');
@@ -528,6 +517,12 @@
             canvas.addEventListener('touchstart', handleTouch);
             canvas.addEventListener('touchmove', handleTouch);
             canvas.addEventListener('touchend', endDrawing);
+
+             // ボタンのスタイルをリセット
+                buttons.forEach(button => {
+                        button.classList.add('btn-neutral');
+                        button.classList.remove('btn-selected', 'btn-unselected');
+                    });
             
         }
         
