@@ -327,11 +327,11 @@
                 // リスクタイプ選択画面を表示
                 document.getElementById('risk-drawing').style.display = 'none';
 
-            // ボタンのスタイルをリセット
-            buttons.forEach(button => {
-                    button.classList.add('btn-neutral');
-                    button.classList.remove('btn-selected', 'btn-unselected');
-                });
+                // ボタンのスタイルをリセット
+                buttons.forEach(button => {
+                        button.classList.add('btn-neutral');
+                        button.classList.remove('btn-selected', 'btn-unselected');
+                    });
 
                 nextImage();
             }
@@ -364,8 +364,7 @@
                 // リスクを感じる場合は描画画面を表示
                 document.getElementById('risk-drawing').style.display = 'block';
                 setupCanvas();
-                
-
+        
             }, 500); // 500ミリ秒の遅延
         }
         
