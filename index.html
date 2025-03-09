@@ -356,11 +356,7 @@
                 document.getElementById('risk-drawing').style.display = 'block';
                 setupCanvas();
                 
-                // ボタンのスタイルをリセット
-                buttons.forEach(button => {
-                    button.classList.add('btn-neutral');
-                    button.classList.remove('btn-selected', 'btn-unselected');
-                });
+
             }, 500); // 500ミリ秒の遅延
         }
         
@@ -534,6 +530,12 @@
                 imageData: drawnImageData,
                 path: currentPath
             };
+
+            // ボタンのスタイルをリセット
+            buttons.forEach(button => {
+                    button.classList.add('btn-neutral');
+                    button.classList.remove('btn-selected', 'btn-unselected');
+                });
 
             nextImage();
         }
