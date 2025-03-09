@@ -413,8 +413,9 @@
                 // エラーハンドリングを追加
                 credentials: 'omit' // 認証情報を送信しない
             })
-            .then(() => {
-                alert('結果が正常に送信されました。ご協力ありがとうございました。');
+             .then(response => {
+        console.log('データ送信完了');
+        alert('結果が正常に送信されました。ご協力ありがとうございました。');
             })
             .catch(error => {
                 console.error('送信エラー:', error);
