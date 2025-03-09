@@ -324,6 +324,15 @@
                     hasRisk: false,
                     riskType: null,
                 });
+                // リスクタイプ選択画面を表示
+                document.getElementById('risk-drawing').style.display = 'none';
+
+            // ボタンのスタイルをリセット
+            buttons.forEach(button => {
+                    button.classList.add('btn-neutral');
+                    button.classList.remove('btn-selected', 'btn-unselected');
+                });
+
                 nextImage();
             }
         }
