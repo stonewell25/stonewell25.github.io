@@ -486,11 +486,6 @@
                 
                 // リスクを感じた画像を保存
                 riskImages.push(images[currentImageIndex]);
-                
-                
-                // リスクを感じる場合は描画画面を表示
-                document.getElementById('risk-drawing').style.display = 'block';
-                setupCanvas();
 
                 // ボタンのスタイルをリセット
                 buttons.forEach(button => {
@@ -498,6 +493,10 @@
                         button.classList.remove('btn-selected', 'btn-unselected');
                     });
         
+                // リスクを感じる場合は描画画面を表示
+                document.getElementById('risk-drawing').style.display = 'block';
+                setupCanvas();
+
             }, 500); // 500ミリ秒の遅延
         }
         
