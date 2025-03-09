@@ -471,10 +471,10 @@
                 buttons.forEach(button => {
                     if (button.textContent === riskType) {
                         button.classList.add('btn-selected');
-                        button.classList.remove('btn-neutral', 'btn-unselected');
+                        button.classList.remove('btn-unselected');
                     } else {
                         button.classList.add('btn-unselected');
-                        button.classList.remove('btn-neutral', 'btn-selected');
+                        button.classList.remove('btn-selected');
                     }
                 });
             
