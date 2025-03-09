@@ -212,45 +212,45 @@
                 <p>4. すべての画像を評価した後、リスクを感じた画像の中から最もリスクが高いと感じる上位3つを選択していただきます。</p>
                 <button class="btn btn-primary" onclick="startExperiment()">実験を開始する</button>
             </div>
-            
-            <div id="experiment" style="display: none;">
-                <div class="progress">
-                    <div id="progress-bar" class="progress-bar" style="width: 0%">0/20</div>
-                </div>
-                
-                <div class="image-container">
-                    <img id="current-image" src="" alt="評価画像">
-                </div>
-                
-                <div class="controls">
-                    <div>
-                        <p>この画像から事故リスクを感じますか？</p>
-                        <button class="btn btn-primary" onclick="selectRisk(true)">はい、リスクを感じる</button>
-                        <button class="btn btn-secondary" onclick="selectRisk(false)">いいえ、リスクを感じない</button>
-                        <button class="btn btn-neutral" onclick="previousImage()" id="prev-button" style="display: none;">前の画像に戻る</button>
-                    </div>
-                    <div id="risk-types" class="risk-types">
-                        <p>どのようなリスクを最も強く感じますか？</p>
-                        <button class="btn btn-neutral" onclick="selectRiskType('切り傷')">切り傷</button>
-                        <button class="btn btn-neutral" onclick="selectRiskType('火事')">火事</button>
-                        <button class="btn btn-neutral" onclick="selectRiskType('転倒')">転倒</button>
-                         <p class="risk-type-hint" style="margin-top: 10px; font-size: 0.9em;">
-                            選択後、「リスクタイプを確定」ボタンを押してください。確定するまでは何度でも選び直せます。
-                        </p>
-                    </div>
-                   <div id="risk-drawing" class="risk-drawing" style="display: none;">
-                        <p>リスクを感じる部分を円で囲んでください。</p>
-                        <div class="canvas-container">
-                            <canvas id="drawing-canvas" style="border:1px solid #000; cursor: crosshair;"></canvas>
-                        </div>
-                        <div class="drawing-controls">
-                            <button class="btn btn-secondary" onclick="clearDrawing()">クリア</button>
-                            <button class="btn btn-primary" onclick="confirmDrawing()">確定</button>
-                        </div>
-                    </div> 
-                </div>
-
+    <div id="experiment" style="display: none;">
+            <div class="progress">
+                <div id="progress-bar" class="progress-bar" style="width: 0%">0/20</div>
             </div>
+            
+            <div class="image-container">
+                <img id="current-image" src="" alt="評価画像">
+            </div>
+            
+            <div class="controls">
+                <div>
+                    <p>この画像から事故リスクを感じますか？</p>
+                    <button class="btn btn-primary" onclick="selectRisk(true)">はい、リスクを感じる</button>
+                    <button class="btn btn-secondary" onclick="selectRisk(false)">いいえ、リスクを感じない</button>
+                    <button class="btn btn-neutral" onclick="previousImage()" id="prev-button" style="display: none;">前の画像に戻る</button>
+                </div>
+                <div id="risk-types" class="risk-types">
+                    <p>どのようなリスクを最も強く感じますか？</p>
+                    <button class="btn btn-neutral" onclick="selectRiskType('切り傷')">切り傷</button>
+                    <button class="btn btn-neutral" onclick="selectRiskType('火事')">火事</button>
+                    <button class="btn btn-neutral" onclick="selectRiskType('転倒')">転倒</button>
+                    <p class="risk-type-hint" style="margin-top: 10px; font-size: 0.9em;">
+                        選択後、「リスクタイプを確定」ボタンを押してください。確定するまでは何度でも選び直せます。
+                    </p>
+                </div>
+                <div id="risk-drawing" class="risk-drawing" style="display: none;">
+                    <p>リスクを感じる部分を円で囲んでください。</p>
+                    <div class="canvas-container">
+                        <canvas id="drawing-canvas" style="border:1px solid #000; cursor: crosshair;"></canvas>
+                    </div>
+                    <div class="drawing-controls">
+                        <button class="btn btn-secondary" onclick="clearDrawing()">クリア</button>
+                        <button class="btn btn-primary" onclick="confirmDrawing()">確定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
             
             <div id="ranking" class="ranking-container">
                 <h2>リスクランキング</h2>
@@ -569,22 +569,6 @@
         }
                 
         
-        // 描画終了
-        function endDrawing() {
-            if (!isDrawing) return;
-            isDrawing = false;
-            
-            if (currentCircle && currentCircle.radius > 5) {
-                circles.push(currentCircle);
-            }
-            currentCircle = null;
-            
-            // キャンバスをクリアして画像を再描画
-            ctx.putImageData(currentImageData, 0, 0);
-            
-            // すべての円を描画
-            drawAllCircles();
-        }
         
         // すべての円を描画
         function drawAllCircles() {
