@@ -172,6 +172,12 @@
                         <button class="btn btn-primary" onclick="selectRisk(true)">はい、リスクを感じる</button>
                         <button class="btn btn-secondary" onclick="selectRisk(false)">いいえ、リスクを感じない</button>
                     </div>
+                    <div id="risk-types" class="risk-types">
+                        <p>どのようなリスクを最も強く感じますか？</p>
+                        <button class="btn btn-neutral" onclick="selectRiskType('切り傷')">切り傷</button>
+                        <button class="btn btn-neutral" onclick="selectRiskType('火事')">火事</button>
+                        <button class="btn btn-neutral" onclick="selectRiskType('転倒')">転倒</button>
+                    </div>
                     <div id="risk-drawing" class="risk-drawing" style="display: none;">
                         <p>リスクを感じる部分を円で囲んでください。</p>
                         <div class="canvas-container">
@@ -183,12 +189,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="risk-types" class="risk-types">
-                        <p>どのようなリスクを最も強く感じますか？</p>
-                        <button class="btn btn-neutral" onclick="selectRiskType('切り傷')">切り傷</button>
-                        <button class="btn btn-neutral" onclick="selectRiskType('火事')">火事</button>
-                        <button class="btn btn-neutral" onclick="selectRiskType('転倒')">転倒</button>
-                </div>
+
             </div>
             
             <div id="ranking" class="ranking-container">
@@ -313,6 +314,25 @@
                 });
                 nextImage();
             }
+        }
+
+                // リスクタイプ選択関数を修正
+        function selectRiskType(riskType) {
+            responses.push({
+                imageUrl: images[currentImageIndex],
+                hasRisk: true,
+                riskType: riskType,
+                circles: circles,
+                drawnImageData: window.tempDrawingData.imageData
+            });
+            
+            // リスクを感じた画像を保存
+            riskImages.push(images[currentImageIndex]);
+            
+            // 一時データをクリア
+            window.tempDrawingData = null;
+            
+            nextImage();
         }
         
         // キャンバスのセットアップ
@@ -489,24 +509,7 @@
         
 
         
-        // リスクタイプ選択関数を修正
-        function selectRiskType(riskType) {
-            responses.push({
-                imageUrl: images[currentImageIndex],
-                hasRisk: true,
-                riskType: riskType,
-                circles: circles,
-                drawnImageData: window.tempDrawingData.imageData
-            });
-            
-            // リスクを感じた画像を保存
-            riskImages.push(images[currentImageIndex]);
-            
-            // 一時データをクリア
-            window.tempDrawingData = null;
-            
-            nextImage();
-        }
+
         
                 
         // 次の画像へ
