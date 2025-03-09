@@ -64,6 +64,19 @@
         .btn:hover {
             opacity: 0.9;
         }
+        .btn-selected {
+            background-color: #1565C0;
+            color: white;
+            font-weight: bold;
+            transform: scale(1.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .btn-unselected {
+            background-color: #90CAF9;
+            color: #555;
+            opacity: 0.7;
+        }
         .progress {
             width: 100%;
             background-color: #f3f3f3;
@@ -304,8 +317,8 @@
             if (hasRisk) {
                document.getElementById('risk-types').style.display = 'block';
                 // リスクを感じる場合は描画画面を表示
-                document.getElementById('risk-drawing').style.display = 'block';
-                setupCanvas();
+                //document.getElementById('risk-drawing').style.display = 'block';
+                //setupCanvas();
             } else {
                 // リスクなしの場合は次の画像へ
                 responses.push({
@@ -319,21 +332,36 @@
 
         // リスクタイプ選択関数を修正
         function selectRiskType(riskType) {
-            responses.push({
-                imageUrl: images[currentImageIndex],
-                hasRisk: true,
-                riskType: riskType,
-                circles: circles,
-                drawnImageData: window.tempDrawingData.imageData
+             // 選択されたボタンを強調表示
+            const buttons = document.querySelectorAll('#risk-types .btn-neutral');
+            buttons.forEach(button => {
+                if (button.textContent === riskType) {
+                    button.classList.add('btn-selected');
+                    button.classList.remove('btn-neutral', 'btn-unselected');
+                } else {
+                    button.classList.add('btn-unselected');
+                    button.classList.remove('btn-neutral', 'btn-selected');
+                }
             });
-            
-            // リスクを感じた画像を保存
-            riskImages.push(images[currentImageIndex]);
-            
-            // 一時データをクリア
-            window.tempDrawingData = null;
-            
-            nextImage();
+                // 少し遅延を入れて視覚効果を見せた後、次の画像へ
+            setTimeout(() => {
+                responses.push({
+                    imageUrl: images[currentImageIndex],
+                    hasRisk: true,
+                    riskType: riskType
+                });
+                
+                // リスクを感じた画像を保存
+                riskImages.push(images[currentImageIndex]);
+                
+                nextImage();
+                
+                // ボタンのスタイルをリセット
+                buttons.forEach(button => {
+                    button.classList.add('btn-neutral');
+                    button.classList.remove('btn-selected', 'btn-unselected');
+                });
+            }, 500); // 500ミリ秒の遅延
         }
         
         // キャンバスのセットアップ
