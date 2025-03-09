@@ -111,10 +111,26 @@
             cursor: pointer;
             border: 2px solid transparent;
             transition: all 0.3s;
+            position: relative;
         }
         .ranking-image.selected {
             border-color: #4CAF50;
             transform: scale(1.05);
+        }
+        .rank-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 25px;
+            height: 25px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
         }
         .results {
             display: none;
@@ -600,35 +616,65 @@
         }
         
         // ランキング選択
+        // ランキング選択
         function selectRanking(imgElement) {
             const index = parseInt(imgElement.dataset.index);
             
-            // 既に選択済みの場合は何もしない
-            if (rankings.includes(index)) return;
+            // 既に選択済みの場合は選択を解除
+            const alreadySelectedPosition = rankings.indexOf(index);
+            if (alreadySelectedPosition !== -1) {
+                // 選択を解除
+                rankings[alreadySelectedPosition] = null;
+                imgElement.classList.remove('selected');
+                
+                // 順位バッジを削除
+                const existingBadge = imgElement.querySelector('.rank-badge');
+                if (existingBadge) {
+                    existingBadge.remove();
+                }
+                
+                // ランキングステータスを更新
+                updateRankingStatus();
+                return;
+            }
             
             // 現在の順位に画像を設定
             rankings[currentRankingPosition] = index;
             
             // 選択状態を視覚的に表示
-            document.querySelectorAll('.ranking-image').forEach(img => {
-                if (parseInt(img.dataset.index) === index) {
-                    img.classList.add('selected');
-                    img.title = `${currentRankingPosition + 1}位`;
-                }
-            });
+            imgElement.classList.add('selected');
+            
+            // 順位バッジを追加
+            const rankBadge = document.createElement('div');
+            rankBadge.classList.add('rank-badge');
+            rankBadge.textContent = (currentRankingPosition + 1).toString();
+            imgElement.appendChild(rankBadge);
             
             // 次の順位へ
             currentRankingPosition++;
             
             // ランキングステータスを更新
+            updateRankingStatus();
+        }
+        
+        // ランキングステータスを更新
+        function updateRankingStatus() {
+            // 次に選択する順位を特定
+            currentRankingPosition = rankings.indexOf(null);
+            if (currentRankingPosition === -1) {
+                currentRankingPosition = 3; // すべて選択済み
+            }
+            
+            // ステータス表示を更新
             if (currentRankingPosition < 3) {
                 document.getElementById('ranking-status').textContent = `${currentRankingPosition + 1}位`;
+                document.getElementById('complete-ranking').disabled = true;
             } else {
                 document.getElementById('ranking-status').textContent = '選択完了';
                 document.getElementById('complete-ranking').disabled = false;
             }
         }
-        
+
         // ランキング確定
         document.getElementById('complete-ranking').addEventListener('click', function() {
             showResults();
