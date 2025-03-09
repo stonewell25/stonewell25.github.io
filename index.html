@@ -441,6 +441,22 @@
         // リスク選択関数を修正
         function selectRisk(hasRisk) {
             if (hasRisk) {
+                 // 選択されたボタンを強調表示
+                const buttons = document.querySelectorAll('#risk-types .btn-neutral');
+                buttons.forEach(button => {
+                    if (button.textContent === riskType) {
+                        button.classList.add('btn-selected');
+                        button.classList.remove('btn-neutral', 'btn-unselected');
+                    } else {
+                        button.classList.add('btn-unselected');
+                        button.classList.remove('btn-neutral', 'btn-selected');
+                    }
+                });
+                // ボタンのスタイルをリセット
+                buttons.forEach(button => {
+                        button.classList.add('btn-neutral');
+                        button.classList.remove('btn-selected', 'btn-unselected');
+                    });
                document.getElementById('risk-types').style.display = 'block';
             } else {
                 // リスクなしの場合は次の画像へ
@@ -458,17 +474,7 @@
 
         // リスクタイプ選択関数を修正
         function selectRiskType(riskType) {
-             // 選択されたボタンを強調表示
-            const buttons = document.querySelectorAll('#risk-types .btn-neutral');
-            buttons.forEach(button => {
-                if (button.textContent === riskType) {
-                    button.classList.add('btn-selected');
-                    button.classList.remove('btn-neutral', 'btn-unselected');
-                } else {
-                    button.classList.add('btn-unselected');
-                    button.classList.remove('btn-neutral', 'btn-selected');
-                }
-            });
+            
                 // 少し遅延を入れて視覚効果を見せた後、次の画像へ
             setTimeout(() => {
                 responses.push({
@@ -490,7 +496,7 @@
         }
         
         // キャンバスのセットアップ
-        function setupCanvas(buttons) {
+        function setupCanvas() {
             
             const img = document.getElementById('current-image');
             canvas = document.getElementById('drawing-canvas');
@@ -518,11 +524,7 @@
             canvas.addEventListener('touchmove', handleTouch);
             canvas.addEventListener('touchend', endDrawing);
 
-             // ボタンのスタイルをリセット
-                buttons.forEach(button => {
-                        button.classList.add('btn-neutral');
-                        button.classList.remove('btn-selected', 'btn-unselected');
-                    });
+             
             
         }
         
@@ -687,6 +689,7 @@
                 
         // 次の画像へ
         function nextImage() {
+            
             currentImageIndex++;
             
             if (currentImageIndex < totalImages) {
