@@ -415,7 +415,14 @@
             document.getElementById('progress-bar').textContent = `${currentImageIndex + 1}/${totalImages}`;
             document.getElementById('risk-types').style.display = 'none';
             document.getElementById('risk-drawing').style.display = 'none';
-            
+            // リスクタイプ選択ボタンのクラスをリセット
+            const typeButtons = document.querySelectorAll('#risk-types .btn-neutral, #risk-types button');
+            typeButtons.forEach(button => {
+                button.classList.remove('btn-selected', 'btn-unselected');
+                if (!button.classList.contains('btn-neutral') && button.id !== 'confirm-risk-type') {
+                    button.classList.add('btn-neutral');
+                }
+            });  
             // 「前の画像に戻る」ボタンの表示/非表示を更新
             updatePrevButton();
         }
@@ -650,6 +657,7 @@
         }
         // 次の画像へ
         function nextImage() {
+            
             
             currentImageIndex++;
             
