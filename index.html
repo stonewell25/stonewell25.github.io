@@ -155,7 +155,7 @@
             margin: 10px 0;
             max-width: 100%;
         }
-        .drawing- {
+        .drawing-controls {
             margin-top: 10px;
             display: flex;
             justify-content: center;
@@ -199,11 +199,9 @@
             <button class="btn btn-primary" onclick="checkPassword()">送信</button>
         </div>
     </div>
-
     <div id="experiment-content" class="hidden">
         <div class="container">
             <h1>リスク評価実験</h1>
-            
             <div id="instructions">
                 <h2>実験の手順</h2>
                 <p>1. 表示される20枚の画像を一枚ずつ評価します。</p>
@@ -216,11 +214,9 @@
             <div class="progress">
                 <div id="progress-bar" class="progress-bar" style="width: 0%">0/20</div>
             </div>
-            
             <div class="image-container">
                 <img id="current-image" src="" alt="評価画像">
             </div>
-            
             <div class="controls">
                 <div>
                     <p>この画像から事故リスクを感じますか？</p>
@@ -248,23 +244,17 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-
-            
+        </div>            
             <div id="ranking" class="ranking-container">
                 <h2>リスクランキング</h2>
                 <p>リスクを感じると評価した画像の中から、最もリスクが高いと感じる上位3つを順番に選択してください。</p>
                 <p>選択中: <span id="ranking-status">1位</span></p>
-                
                 <div id="ranking-images" class="ranking-images">
                     <!-- リスクを感じた画像がここに表示されます -->
                 </div>
-                
                 <button id="complete-ranking" class="btn btn-primary" disabled>ランキングを確定する</button>
                  <button class="btn btn-neutral" onclick="restartImageEvaluation()">評価をやり直す</button>
             </div>
-            
             <div id="results" class="results">
             <h2>実験結果</h2>
             <p>ご協力ありがとうございました。以下があなたの回答です：</p>
@@ -276,9 +266,7 @@
     <div class="spinner"></div>
     <p>データを送信中です。しばらくお待ちください...</p>
 </div>
-
     </div>
-
     <script>
         // 実験用の変数
         const totalImages = 20;
@@ -569,14 +557,7 @@
             ctx.lineWidth = 3;
         }
                 
-        
-        
-        // すべての円を描画
-        function drawAllCircles() {
-            circles.forEach(circle => {
-                drawCircle(circle);
-            });
-        }
+    
         
         // 円を描画
         function drawCircle(circle) {
@@ -686,12 +667,7 @@
 
             
         }
-        
 
-        
-
-        
-                
         // 次の画像へ
         function nextImage() {
             
