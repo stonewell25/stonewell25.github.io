@@ -205,7 +205,7 @@
         function checkPassword() {
             const password = document.getElementById('password-input').value;
             // 実際のパスワードに置き換えてください
-            if (password === "experiment2023") {
+            if (password === "2023") {
                 document.getElementById('password-screen').classList.add('hidden');
                 document.getElementById('experiment-content').classList.remove('hidden');
             } else {
@@ -404,27 +404,7 @@
             document.getElementById('result-content').innerHTML = resultHTML;
         }
 
-        // 結果のダウンロードと送信
-        function downloadAndSubmitResults() {
-            const results = {
-                userId: generateUserId(), // ランダムなユーザーIDを生成
-                responses: responses,
-                riskRankings: rankings.map(index => index !== null ? images.indexOf(riskImages[index]) + 1 : null)
-            };
-            
-            // 結果をダウンロード
-            // const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results, null, 2));
-            // const downloadAnchorNode = document.createElement('a');
-            // downloadAnchorNode.setAttribute("href", dataStr);
-            // downloadAnchorNode.setAttribute("download", "risk_evaluation_results.json");
-            // document.body.appendChild(downloadAnchorNode);
-            // downloadAnchorNode.click();
-            // downloadAnchorNode.remove();
-            
-            // Google Apps Scriptにデータを送信
-            submitToGoogleSheet(results);
-        }
-        
+
         // ランダムなユーザーIDを生成
         function generateUserId() {
             return 'user_' + Math.random().toString(36).substring(2, 15);
@@ -455,6 +435,28 @@
                 alert('結果の送信中にエラーが発生しました。ダウンロードしたJSONファイルを保存してください。');
             });
         }
+
+                // 結果のダウンロードと送信
+        function downloadAndSubmitResults() {
+            const results = {
+                userId: generateUserId(), // ランダムなユーザーIDを生成
+                responses: responses,
+                riskRankings: rankings.map(index => index !== null ? images.indexOf(riskImages[index]) + 1 : null)
+            };
+            
+            // 結果をダウンロード
+            // const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results, null, 2));
+            // const downloadAnchorNode = document.createElement('a');
+            // downloadAnchorNode.setAttribute("href", dataStr);
+            // downloadAnchorNode.setAttribute("download", "risk_evaluation_results.json");
+            // document.body.appendChild(downloadAnchorNode);
+            // downloadAnchorNode.click();
+            // downloadAnchorNode.remove();
+            
+            // Google Apps Scriptにデータを送信
+            submitToGoogleSheet(results);
+        }
+        
 
     </script>
 </body>
