@@ -512,11 +512,7 @@
             
             // 選択をリセット
             window.selectedRiskType = null;
-            // ボタンのスタイルをリセット
-            buttons.forEach(button => {
-                button.classList.add('btn-neutral');
-                button.classList.remove('btn-selected', 'btn-unselected');
-            });
+            const typeButtons = document.querySelectorAll('#risk-types .btn-neutral');
         }
     
         
