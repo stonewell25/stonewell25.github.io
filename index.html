@@ -436,6 +436,9 @@
         let points = []; // 描画中の点を保存する配列
         let currentPath = null; // 現在の描画パス
         let hasDrawn = false; // 既に描画済みかどうかのフラグ
+
+        // 選択されたボタンを強調表示
+        const buttons = document.querySelectorAll('#risk-types .btn-neutral');
         
         // リスク選択関数を修正
         function selectRisk(hasRisk) {
@@ -457,9 +460,13 @@
         }
 
         // リスクタイプ選択関数を修正
-        function selectRiskType(riskType) {
-             // 選択されたボタンを強調表示
-                const buttons = document.querySelectorAll('#risk-types .btn-neutral');
+        function selectRiskType(riskType, buttons) {
+                 // ボタンのスタイルをリセット
+                buttons.forEach(button => {
+                        button.classList.add('btn-neutral');
+                        button.classList.remove('btn-selected', 'btn-unselected');
+                    });
+             
                 buttons.forEach(button => {
                     if (button.textContent === riskType) {
                         button.classList.add('btn-selected');
@@ -469,11 +476,6 @@
                         button.classList.remove('btn-neutral', 'btn-selected');
                     }
                 });
-                // ボタンのスタイルをリセット
-                buttons.forEach(button => {
-                        button.classList.add('btn-neutral');
-                        button.classList.remove('btn-selected', 'btn-unselected');
-                    });
             
                 // 少し遅延を入れて視覚効果を見せた後、次の画像へ
             
