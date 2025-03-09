@@ -686,11 +686,6 @@
                 
         // 次の画像へ
         function nextImage() {
-            // ボタンのスタイルをリセット
-                buttons.forEach(button => {
-                        button.classList.add('btn-neutral');
-                        button.classList.remove('btn-selected', 'btn-unselected');
-                    });
             currentImageIndex++;
             
             if (currentImageIndex < totalImages) {
