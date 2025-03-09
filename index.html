@@ -500,7 +500,7 @@
             
             // 選択をリセット
             window.selectedRiskType = null;
-            const typeButtons = document.querySelectorAll('#risk-types .btn-neutral');
+            //const typeButtons = document.querySelectorAll('#risk-types .btn-neutral');
         }
     
         
@@ -532,11 +532,7 @@
             canvas.addEventListener('touchstart', handleTouch);
             canvas.addEventListener('touchmove', handleTouch);
             canvas.addEventListener('touchend', endDrawing);
-
-             
-            
         }
-        
         // 描画開始
         function startDrawing(e) {
             // 既に描画済みの場合は何もしない
@@ -556,9 +552,7 @@
             ctx.strokeStyle = 'red';
             ctx.lineWidth = 3;
         }
-                
-    
-        
+
         // 円を描画
         function drawCircle(circle) {
             ctx.beginPath();
@@ -567,7 +561,6 @@
             ctx.lineWidth = 3;
             ctx.stroke();
         }
-
         // 描画中
         function draw(e) {
             if (!isDrawing || hasDrawn) return;
@@ -582,8 +575,7 @@
             // 線を描画
             ctx.lineTo(x, y);
             ctx.stroke();
-        }
-        
+        } 
         // 描画終了
         function endDrawing() {
             if (!isDrawing || hasDrawn) return;
@@ -606,7 +598,6 @@
                 points = [];
             }
         }
-        
         // タッチイベント処理
         function handleTouch(e) {
             e.preventDefault();
@@ -620,7 +611,6 @@
             );
             canvas.dispatchEvent(mouseEvent);
         }
-        
         // 描画をクリア
         function clearDrawing() {
             // キャンバスをクリア
@@ -633,27 +623,20 @@
             currentPath = null;
             hasDrawn = false;
         }
-        
         // 描画を確定
         function confirmDrawing() {
             // 描画がない場合は確定できない
             if (!hasDrawn) {
                 alert('リスクを感じる部分を囲んでください');
                 return;
-            }
-            
+            }    
             // キャンバスの内容を画像データとして取得
-            const drawnImageData = canvas.toDataURL('image/jpg');
-            
-            
-            
-            
+            const drawnImageData = canvas.toDataURL('image/jpg'); 
             // 描画データを一時保存
             window.tempDrawingData = {
                 imageData: drawnImageData,
                 path: currentPath
             };
-
             // 最新の回答を更新して画像データを追加
             const lastResponseIndex = responses.length - 1;
             if (lastResponseIndex >= 0) {
@@ -661,13 +644,10 @@
                 responses[lastResponseIndex].path = currentPath;
             }
             nextImage();
-
             // リスクタイプ選択画面を表示
             document.getElementById('risk-drawing').style.display = 'none';
 
-            
         }
-
         // 次の画像へ
         function nextImage() {
             
