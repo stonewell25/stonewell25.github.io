@@ -121,6 +121,17 @@
         .hidden {
             display: none;
         }
+        .canvas-container {
+            position: relative;
+            margin: 10px 0;
+            max-width: 100%;
+        }
+        .drawing-controls {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -161,7 +172,17 @@
                         <button class="btn btn-primary" onclick="selectRisk(true)">はい、リスクを感じる</button>
                         <button class="btn btn-secondary" onclick="selectRisk(false)">いいえ、リスクを感じない</button>
                     </div>
-                    
+                    <div id="risk-drawing" class="risk-drawing" style="display: none;">
+                        <p>リスクを感じる部分を円で囲んでください。</p>
+                        <div class="canvas-container">
+                            <canvas id="drawing-canvas" style="border:1px solid #000; cursor: crosshair;"></canvas>
+                        </div>
+                        <div class="drawing-controls">
+                            <button class="btn btn-secondary" onclick="clearDrawing()">クリア</button>
+                            <button class="btn btn-primary" onclick="confirmDrawing()">確定</button>
+                        </div>
+                    </div>
+
                     <div id="risk-types" class="risk-types">
                         <p>どのようなリスクを最も強く感じますか？</p>
                         <button class="btn btn-neutral" onclick="selectRiskType('切り傷')">切り傷</button>
@@ -271,34 +292,182 @@
         }
         
         // リスク選択
+        // キャンバス関連の変数
+        let canvas, ctx;
+        let isDrawing = false;
+        let startX, startY;
+        let currentCircle = null;
+        let circles = [];
+        let currentImageData = null;
+        
+        // リスク選択関数を修正
         function selectRisk(hasRisk) {
             if (hasRisk) {
-                document.getElementById('risk-types').style.display = 'block';
+                // リスクを感じる場合は描画画面を表示
+                document.getElementById('risk-drawing').style.display = 'block';
+                setupCanvas();
             } else {
                 // リスクなしの場合は次の画像へ
                 responses.push({
                     imageUrl: images[currentImageIndex],
                     hasRisk: false,
-                    riskType: null
+                    riskType: null,
+                    circles: []
                 });
                 nextImage();
             }
         }
         
-        // リスクタイプ選択
+        // キャンバスのセットアップ
+        function setupCanvas() {
+            const img = document.getElementById('current-image');
+            canvas = document.getElementById('drawing-canvas');
+            ctx = canvas.getContext('2d');
+            
+            // 画像のサイズに合わせてキャンバスをリサイズ
+            canvas.width = img.width;
+            canvas.height = img.height;
+            
+            // 画像をキャンバスに描画
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            
+            // イベントリスナーを設定
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', endDrawing);
+            canvas.addEventListener('mouseout', endDrawing);
+            
+            // タッチデバイス用
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', endDrawing);
+            
+            // 円の配列をクリア
+            circles = [];
+        }
+        
+        // 描画開始
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            startX = e.clientX - rect.left;
+            startY = e.clientY - rect.top;
+            currentCircle = { x: startX, y: startY, radius: 0 };
+        }
+        
+        // 描画中
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const currentX = e.clientX - rect.left;
+            const currentY = e.clientY - rect.top;
+            
+            // 半径を計算
+            const dx = currentX - startX;
+            const dy = currentY - startY;
+            currentCircle.radius = Math.sqrt(dx * dx + dy * dy);
+            
+            // キャンバスをクリアして画像を再描画
+            ctx.putImageData(currentImageData, 0, 0);
+            
+            // 既存の円を描画
+            drawAllCircles();
+            
+            // 現在の円を描画
+            drawCircle(currentCircle);
+        }
+        
+        // 描画終了
+        function endDrawing() {
+            if (!isDrawing) return;
+            isDrawing = false;
+            
+            if (currentCircle && currentCircle.radius > 5) {
+                circles.push(currentCircle);
+            }
+            currentCircle = null;
+            
+            // キャンバスをクリアして画像を再描画
+            ctx.putImageData(currentImageData, 0, 0);
+            
+            // すべての円を描画
+            drawAllCircles();
+        }
+        
+        // すべての円を描画
+        function drawAllCircles() {
+            circles.forEach(circle => {
+                drawCircle(circle);
+            });
+        }
+        
+        // 円を描画
+        function drawCircle(circle) {
+            ctx.beginPath();
+            ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+        
+        // タッチイベント処理
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(
+                e.type === 'touchstart' ? 'mousedown' : 'mousemove',
+                {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                }
+            );
+            canvas.dispatchEvent(mouseEvent);
+        }
+        
+        // 描画をクリア
+        function clearDrawing() {
+            circles = [];
+            ctx.putImageData(currentImageData, 0, 0);
+        }
+        
+        // 描画を確定
+        function confirmDrawing() {
+            // キャンバスの内容を画像データとして取得
+            const drawnImageData = canvas.toDataURL('image/png');
+            
+            // リスクタイプ選択画面を表示
+            document.getElementById('risk-drawing').style.display = 'none';
+            document.getElementById('risk-types').style.display = 'block';
+            
+            // 描画データを一時保存
+            window.tempDrawingData = {
+                imageData: drawnImageData,
+                circles: circles
+            };
+        }
+        
+        // リスクタイプ選択関数を修正
         function selectRiskType(riskType) {
             responses.push({
                 imageUrl: images[currentImageIndex],
                 hasRisk: true,
-                riskType: riskType
+                riskType: riskType,
+                circles: circles,
+                drawnImageData: window.tempDrawingData.imageData
             });
             
             // リスクを感じた画像を保存
             riskImages.push(images[currentImageIndex]);
             
+            // 一時データをクリア
+            window.tempDrawingData = null;
+            
             nextImage();
         }
         
+                
         // 次の画像へ
         function nextImage() {
             currentImageIndex++;
