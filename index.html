@@ -234,6 +234,9 @@
                         <button class="btn btn-neutral" onclick="selectRiskType('切り傷')">切り傷</button>
                         <button class="btn btn-neutral" onclick="selectRiskType('火事')">火事</button>
                         <button class="btn btn-neutral" onclick="selectRiskType('転倒')">転倒</button>
+                         <p class="risk-type-hint" style="margin-top: 10px; font-size: 0.9em;">
+        ※選択後、「リスクタイプを確定」ボタンを押してください。確定するまでは何度でも選び直せます。
+    </p>
                     </div>
                    <div id="risk-drawing" class="risk-drawing" style="display: none;">
                         <p>リスクを感じる部分を円で囲んでください。</p>
@@ -463,10 +466,7 @@
                  // ボタンのスタイルをリセット
                 
                 const buttons = document.querySelectorAll('#risk-types .btn-neutral');
-                buttons.forEach(button => {
-                        button.classList.add('btn-neutral');
-                        button.classList.remove('btn-selected', 'btn-unselected');
-                    });
+                
              // 選択されたボタンを強調表示
                 buttons.forEach(button => {
                     if (button.textContent === riskType) {
@@ -478,24 +478,41 @@
                     }
                 });
             
-                // 少し遅延を入れて視覚効果を見せた後、次の画像へ
-            
-                responses.push({
-                    imageUrl: images[currentImageIndex],
-                    hasRisk: true,
-                    riskType: riskType
-                });
+                // 選択したリスクタイプを一時保存
+                window.selectedRiskType = riskType;
                 
-                // リスクを感じた画像を保存
-                riskImages.push(images[currentImageIndex]);
-
-                // リスクを感じる場合は描画画面を表示
-                document.getElementById('risk-drawing').style.display = 'block';
-                setupCanvas();
-
+                // 確定ボタンを表示（なければ作成）
+                if (!document.getElementById('confirm-risk-type')) {
+                    const confirmButton = document.createElement('button');
+                    confirmButton.id = 'confirm-risk-type';
+                    confirmButton.className = 'btn btn-primary';
+                    confirmButton.textContent = 'リスクタイプを確定';
+                    confirmButton.onclick = confirmRiskType;
+                    document.getElementById('risk-types').appendChild(confirmButton);
+                }
                  
 
             }
+        function confirmRiskType() {
+            if (!window.selectedRiskType) return;
+            
+            responses.push({
+                imageUrl: images[currentImageIndex],
+                hasRisk: true,
+                riskType: window.selectedRiskType
+            });
+            
+            // リスクを感じた画像を保存
+            riskImages.push(images[currentImageIndex]);
+            
+            // リスクを感じる場合は描画画面を表示
+            document.getElementById('risk-types').style.display = 'none';
+            document.getElementById('risk-drawing').style.display = 'block';
+            setupCanvas();
+            
+            // 選択をリセット
+            window.selectedRiskType = null;
+        }
     
         
         // キャンバスのセットアップ
