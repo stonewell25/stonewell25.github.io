@@ -227,6 +227,7 @@
                         <p>この画像から事故リスクを感じますか？</p>
                         <button class="btn btn-primary" onclick="selectRisk(true)">はい、リスクを感じる</button>
                         <button class="btn btn-secondary" onclick="selectRisk(false)">いいえ、リスクを感じない</button>
+                        <button class="btn btn-neutral" onclick="previousImage()" id="prev-button" style="display: none;">前の画像に戻る</button>
                     </div>
                     <div id="risk-types" class="risk-types">
                         <p>どのようなリスクを最も強く感じますか？</p>
@@ -258,6 +259,7 @@
                 </div>
                 
                 <button id="complete-ranking" class="btn btn-primary" disabled>ランキングを確定する</button>
+                 <button class="btn btn-neutral" onclick="restartImageEvaluation()">評価をやり直す</button>
             </div>
             
             <div id="results" class="results">
@@ -265,6 +267,8 @@
             <p>ご協力ありがとうございました。以下があなたの回答です：</p>
             <div id="result-content"></div>
             <button class="btn btn-primary" onclick="downloadAndSubmitResults()">結果を送信する</button>
+                    <button class="btn btn-primary" onclick="downloadAndSubmitResults()">結果を送信する</button>
+    <button class="btn btn-neutral" onclick="restartRanking()">ランキングをやり直す</button>
         </div>
             <div id="loading" class="loading" style="display: none;">
     <div class="spinner"></div>
@@ -343,6 +347,76 @@
                 [array[i], array[j]] = [array[j], array[i]];
             }
         }
+
+        // 前の画像に戻る
+        function previousImage() {
+            if (currentImageIndex > 0) {
+                currentImageIndex--;
+                // 最後の回答を削除
+                responses.pop();
+                // 最後にリスクを感じた画像だった場合、riskImagesからも削除
+                const lastImageUrl = images[currentImageIndex];
+                const riskImageIndex = riskImages.indexOf(lastImageUrl);
+                if (riskImageIndex !== -1) {
+                    riskImages.splice(riskImageIndex, 1);
+                }
+                showCurrentImage();
+            }
+        }
+        
+        // 「前の画像に戻る」ボタンの表示/非表示を制御
+        function updatePrevButton() {
+            const prevButton = document.getElementById('prev-button');
+            if (currentImageIndex > 0) {
+                prevButton.style.display = 'inline-block';
+            } else {
+                prevButton.style.display = 'none';
+            }
+        }
+        
+        // 画像評価をやり直す
+        function restartImageEvaluation() {
+            // 変数をリセット
+            currentImageIndex = 0;
+            responses = [];
+            riskImages = [];
+            
+            // 画像評価画面を表示
+            document.getElementById('ranking').style.display = 'none';
+            document.getElementById('experiment').style.display = 'block';
+            
+            // 最初の画像を表示
+            showCurrentImage();
+        }
+        
+        // ランキングをやり直す
+        function restartRanking() {
+            // ランキング変数をリセット
+            rankings = [null, null, null];
+            currentRankingPosition = 0;
+            
+            // 結果画面を非表示にしてランキング画面を表示
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('ranking').style.display = 'flex';
+            
+            // ランキング用の画像を再表示
+            const rankingImagesContainer = document.getElementById('ranking-images');
+            rankingImagesContainer.innerHTML = '';
+            
+            riskImages.forEach((imageUrl, index) => {
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.classList.add('ranking-image');
+                img.dataset.index = index;
+                img.onclick = function() { selectRanking(this); };
+                rankingImagesContainer.appendChild(img);
+            });
+            
+            // ランキングステータスを更新
+            document.getElementById('ranking-status').textContent = '1位';
+            document.getElementById('complete-ranking').disabled = true;
+        }
+
         
         // 現在の画像を表示
         function showCurrentImage() {
@@ -350,6 +424,10 @@
             document.getElementById('progress-bar').style.width = `${(currentImageIndex / totalImages) * 100}%`;
             document.getElementById('progress-bar').textContent = `${currentImageIndex + 1}/${totalImages}`;
             document.getElementById('risk-types').style.display = 'none';
+            document.getElementById('risk-drawing').style.display = 'none';
+            
+            // 「前の画像に戻る」ボタンの表示/非表示を更新
+            updatePrevButton();
         }
         
         // リスク選択
@@ -409,11 +487,6 @@
                 // リスクを感じた画像を保存
                 riskImages.push(images[currentImageIndex]);
 
-                // ボタンのスタイルをリセット
-                buttons.forEach(button => {
-                        button.classList.add('btn-neutral');
-                        button.classList.remove('btn-selected', 'btn-unselected');
-                    });
                 
                 // リスクを感じる場合は描画画面を表示
                 document.getElementById('risk-drawing').style.display = 'block';
