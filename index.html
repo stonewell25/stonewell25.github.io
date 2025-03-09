@@ -397,14 +397,16 @@
             
             document.getElementById('result-content').innerHTML = resultHTML;
         }
-        
-        // 結果のダウンロード
-        function downloadResults() {
+
+        // 結果のダウンロードと送信
+        function downloadAndSubmitResults() {
             const results = {
-                imageEvaluations: responses,
+                userId: generateUserId(), // ランダムなユーザーIDを生成
+                responses: responses,
                 riskRankings: rankings.map(index => index !== null ? images.indexOf(riskImages[index]) + 1 : null)
             };
             
+            // 結果をダウンロード
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results, null, 2));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
@@ -412,7 +414,38 @@
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
+            
+            // Google Apps Scriptにデータを送信
+            submitToGoogleSheet(results);
         }
+        
+        // ランダムなユーザーIDを生成
+        function generateUserId() {
+            return 'user_' + Math.random().toString(36).substring(2, 15);
+        }
+        
+        // Google Apps Scriptにデータを送信
+        function submitToGoogleSheet(data) {
+            // ここにGASのウェブアプリURLを入力
+            const gasUrl = 'https://script.google.com/macros/s/AKfycbwkH4wu8auWBGGKv7sOCVPFs_l28zoTVVD7niGKpezIqSdG2bkzG1aB8IM__tYqG4JL/exec';
+            
+            fetch(gasUrl, {
+                method: 'POST',
+                mode: 'no-cors', // CORS制限を回避
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(() => {
+                alert('結果が正常に送信されました。ご協力ありがとうございました。');
+            })
+            .catch(error => {
+                console.error('送信エラー:', error);
+                alert('結果の送信中にエラーが発生しました。ダウンロードしたJSONファイルを保存してください。');
+            });
+        }
+
     </script>
 </body>
 </html>
