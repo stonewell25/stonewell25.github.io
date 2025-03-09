@@ -725,6 +725,8 @@
         function submitToGoogleSheet(data) {
             // ここにGASのウェブアプリURLを入力
             const gasUrl = 'https://script.google.com/macros/s/AKfycbzrdJ2EvaJaXSAeXZ17oWVjM9474wrCDdXJ62afHKDH5M7RDK9m34ZVu7RAqUVHTZvx/exec';
+            // Google Driveへの保存を要求するフラグを追加
+            data.saveToDrive = true;
             
             // 大きなデータを送信するため、timeoutを長めに設定
             fetch(gasUrl, {
