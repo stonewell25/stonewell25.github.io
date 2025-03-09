@@ -161,6 +161,33 @@
             justify-content: center;
             gap: 10px;
         }
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
     </style>
 </head>
 <body>
@@ -239,6 +266,11 @@
             <div id="result-content"></div>
             <button class="btn btn-primary" onclick="downloadAndSubmitResults()">結果を送信する</button>
         </div>
+            <div id="loading" class="loading" style="display: none;">
+    <div class="spinner"></div>
+    <p>データを送信中です。しばらくお待ちください...</p>
+</div>
+
     </div>
 
     <script>
@@ -731,6 +763,8 @@
         // Google Apps Scriptにデータを送信
        // 結果の送信
         function submitToGoogleSheet(data) {
+            // ローディング表示を表示
+            document.getElementById('loading').style.display = 'flex';
             // ここにGASのウェブアプリURLを入力
             const gasUrl = 'https://script.google.com/macros/s/AKfycbzrdJ2EvaJaXSAeXZ17oWVjM9474wrCDdXJ62afHKDH5M7RDK9m34ZVu7RAqUVHTZvx/exec';
             // Google Driveへの保存を要求するフラグを追加
@@ -747,10 +781,18 @@
                 credentials: 'omit' // 認証情報を送信しない
             })
             .then(response => {
+                // ローディング表示を非表示
+                document.getElementById('loading').style.display = 'none';
                 console.log('データ送信完了');
-                alert('結果が正常に送信されました。ご協力ありがとうございました。');
+                // 結果画面を終了画面に置き換える
+        document.getElementById('results').innerHTML = `
+            <h2>実験終了</h2>
+            <p>以上になります。ご協力いただきありがとうございます、そのまま画面を閉じてください。</p>
+        `;
             })
             .catch(error => {
+                // ローディング表示を非表示
+                document.getElementById('loading').style.display = 'none';
                 console.error('送信エラー:', error);
                 alert('結果の送信中にエラーが発生しました。');
             });
