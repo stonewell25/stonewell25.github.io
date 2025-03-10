@@ -430,7 +430,6 @@
                 [array[i], array[j]] = [array[j], array[i]];
             }
         }
-
         // 前の画像に戻る
         function practicePreviousImage() {
             if (currentImageIndex > 0) {
@@ -460,7 +459,6 @@
                 showCurrentImage();
             }
         }
-        
         // 「前の画像に戻る」ボタンの表示/非表示を制御
         function updatePrevButton() {
             const prevButton = document.getElementById('prev-button');
@@ -470,7 +468,6 @@
                 prevButton.style.display = 'none';
             }
         }
-        
         // 画像評価をやり直す
         function restartImageEvaluation() {
             // 変数をリセット
@@ -485,7 +482,6 @@
             // 最初の画像を表示
             showCurrentImage();
         }
-        
         // ランキングをやり直す
         function restartRanking() {
             // ランキング変数をリセット
@@ -513,8 +509,6 @@
             document.getElementById('ranking-status').textContent = '1位';
             document.getElementById('complete-ranking').disabled = true;
         }
-
-        
         // 現在の画像を表示
         function practiceShowCurrentImage() {
             document.getElementById('practice-image').src = practiceImages[currentPracticeIndex];
@@ -550,7 +544,6 @@
             // 「前の画像に戻る」ボタンの表示/非表示を更新
             updatePrevButton();
         }
-        
         // リスク選択
         // キャンバス関連の変数
         let canvas, ctx;
@@ -610,7 +603,7 @@
             // リスクを感じる場合は描画画面を表示
             document.getElementById('practice-risk-types').style.display = 'none';
             document.getElementById('practice-risk-drawing').style.display = 'block';
-            setupCanvas();
+            practiceSetupCanvas();
             
             // 選択をリセット
             window.selectedRiskType = null;
@@ -688,6 +681,35 @@
             //const typeButtons = document.querySelectorAll('#risk-types .btn-neutral');
         }
         // キャンバスのセットアップ
+        function practiceSetupCanvas() {
+            
+            const img = document.getElementById('practice-image');
+            canvas = document.getElementById('practice-drawing-canvas');
+            ctx = canvas.getContext('2d');
+            
+            // 画像のサイズに合わせてキャンバスをリサイズ
+            canvas.width = img.width;
+            canvas.height = img.height;
+            
+            // 画像をキャンバスに描画
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+             // 変数の初期化
+            points = [];
+            isDrawing = false;
+            hasDrawn = false;
+            
+    
+            // イベントリスナーを設定
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', endDrawing);
+            
+            // タッチデバイス用
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', endDrawing);
+        }
+        // キャンバスのセットアップ
         function setupCanvas() {
             
             const img = document.getElementById('current-image');
@@ -735,7 +757,6 @@
             ctx.strokeStyle = 'red';
             ctx.lineWidth = 3;
         }
-
         // 円を描画
         function drawCircle(circle) {
             ctx.beginPath();
