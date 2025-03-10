@@ -240,7 +240,7 @@
                         <p>この画像から事故リスクを感じますか？</p>
                         <button class="btn btn-primary" onclick="practiceSelectRisk(true)">はい、リスクを感じる</button>
                         <button class="btn btn-secondary" onclick="practiceSelectRisk(false)">いいえ、リスクを感じない</button>
-                        <button class="btn btn-neutral" onclick="practicePreviousImage()" id="practice-prev-button" style="display: none;">前の画像に戻る</button>
+                        <button class="btn btn-neutral" onclick="PreviousImage()" id="practice-prev-button" style="display: none;">前の画像に戻る</button>
                     </div>
                     
                     <div id="practice-risk-types" class="risk-types">
@@ -259,7 +259,7 @@
                             <canvas id="practice-drawing-canvas" style="border:1px solid #000; cursor: crosshair;"></canvas>
                         </div>
                         <div class="drawing-controls">
-                            <button class="btn btn-secondary" onclick="practiceClearDrawing()">クリア</button>
+                            <button class="btn btn-secondary" onclick="clearDrawing()">クリア</button>
                             <button class="btn btn-primary" onclick="practiceConfirmDrawing()">確定</button>
                         </div>
                     </div>
@@ -368,10 +368,10 @@
             
             // 練習用画像のURLを設定
             const practiceFilenames = [
-                'practice1.jpg',
-                'practice2.jpg',
-                'practice3.jpg',
-                'practice4.jpg'
+                'norisk_130.jpg',
+                'norisk_57.jpg',
+                'norisk_900.jpg',
+                'norisk_955.jpg'
             ];
             
             // 練習用画像のURLを設定
@@ -531,8 +531,62 @@
         let currentPath = null; // 現在の描画パス
         let hasDrawn = false; // 既に描画済みかどうかのフラグ
 
-        
-        
+        // リスク選択関数を修正
+        function practiceSelectRisk(hasRisk) {
+            if (hasRisk) {
+                
+               document.getElementById('practice-risk-types').style.display = 'block';
+            } else {
+                nextImage();
+                // リスクタイプ選択画面を表示
+                document.getElementById('practice-risk-drawing').style.display = 'none';
+                
+            }
+        }
+        // リスクタイプ選択関数を修正
+        function practiceSelectRiskType(riskType) {
+                 // ボタンのスタイルをリセット
+                
+                const typeButtons = document.querySelectorAll('#practice-risk-types .btn-neutral');
+                
+             // 選択されたボタンを強調表示
+                typeButtons.forEach(button => {
+                    if (button.textContent === riskType) {
+                        button.classList.add('btn-selected');
+                        button.classList.remove('btn-unselected');
+                    } else {
+                        button.classList.add('btn-unselected');
+                        button.classList.remove('btn-selected');
+                    }
+                });
+            
+                // 選択したリスクタイプを一時保存
+                window.selectedRiskType = riskType;
+                
+                // 確定ボタンを表示（なければ作成）
+                if (!document.getElementById('practice-confirm-risk-type')) {
+                    const confirmButton = document.createElement('button');
+                    confirmButton.id = 'practice-confirm-risk-type';
+                    confirmButton.className = 'btn btn-primary';
+                    confirmButton.textContent = 'リスクタイプを確定';
+                    confirmButton.onclick = practiceConfirmRiskType;
+                    document.getElementById('practice-risk-types').appendChild(confirmButton);
+                }
+
+            }
+        function practiceConfirmRiskType() {
+            if (!window.selectedRiskType) return;
+            
+            // リスクを感じる場合は描画画面を表示
+            document.getElementById('practice-risk-types').style.display = 'none';
+            document.getElementById('practice-risk-drawing').style.display = 'block';
+            setupCanvas();
+            
+            // 選択をリセット
+            window.selectedRiskType = null;
+            //const typeButtons = document.querySelectorAll('#risk-types .btn-neutral');
+        }
+    
         // リスク選択関数を修正
         function selectRisk(hasRisk) {
             if (hasRisk) {
@@ -727,6 +781,17 @@
             hasDrawn = false;
         }
         // 描画を確定
+         function practiceConfirmDrawing() {
+            // 描画がない場合は確定できない
+            if (!hasDrawn) {
+                alert('リスクを感じる部分を囲んでください');
+                return;
+            }    
+            
+            nextImage();
+            // リスクタイプ選択画面を表示
+            document.getElementById('practice-risk-drawing').style.display = 'none';
+        }
         function confirmDrawing() {
             // 描画がない場合は確定できない
             if (!hasDrawn) {
