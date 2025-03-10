@@ -195,7 +195,6 @@
             border-radius: 5px;
             text-align: center;
         }
-
     </style>
 </head>
 <body>
@@ -319,7 +318,6 @@
                 <button id="complete-ranking" class="btn btn-primary" disabled>ランキングを確定する</button>
                 <button class="btn btn-neutral" onclick="restartImageEvaluation()">評価をやり直す</button>
             </div>
-            
             <div id="results" class="results">
                 <h2>実験結果</h2>
                 <p>ご協力ありがとうございました。以下があなたの回答です：</p>
@@ -343,7 +341,6 @@
         let riskImages = [];
         let rankings = [null, null, null];
         let currentRankingPosition = 0;
-
         // 練習用の変数
         const totalPracticeImages = 4;
         let currentPracticeIndex = 0;
@@ -666,8 +663,6 @@
                     confirmButton.onclick = confirmRiskType;
                     document.getElementById('risk-types').appendChild(confirmButton);
                 }
-                 
-
             }
         function confirmRiskType() {
             if (!window.selectedRiskType) return;
@@ -847,7 +842,6 @@
         }
         // 次の画像へ
         function nextImage() {
-            
             
             currentImageIndex++;
             
