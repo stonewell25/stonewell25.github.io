@@ -517,9 +517,9 @@
         
         // 現在の画像を表示
         function practiceShowCurrentImage() {
-            document.getElementById('practice-image').src = images[currentImageIndex];
-            document.getElementById('progress-bar').style.width = `${(currentImageIndex / totalImages) * 100}%`;
-            document.getElementById('progress-bar').textContent = `${currentImageIndex + 1}/${totalImages}`;
+            document.getElementById('practice-image').src = practiceImages[currentPracticeIndex];
+            document.getElementById('practice-progress-bar').style.width = `${(currentPracticeIndex / totalPracticeImages) * 100}%`;
+            document.getElementById('practice-progress-bar').textContent = `${currentPracticeIndex + 1}/${totalPracticeImages}`;
             document.getElementById('practice-risk-types').style.display = 'none';
             document.getElementById('practice-risk-drawing').style.display = 'none';
             // リスクタイプ選択ボタンのクラスをリセット
@@ -560,17 +560,19 @@
         let hasDrawn = false; // 既に描画済みかどうかのフラグ
 
         // リスク選択関数を修正
-        function practiceSelectRisk(hasRisk) {
+         function practiceSelectRisk(hasRisk) {
             if (hasRisk) {
-                
-               document.getElementById('practice-risk-types').style.display = 'block';
+                document.getElementById('practice-risk-types').style.display = 'block';
             } else {
-                nextImage();
-                // リスクタイプ選択画面を表示
-                document.getElementById('practice-risk-drawing').style.display = 'none';
-                
+                practiceResponses.push({
+                    imageUrl: practiceImages[currentPracticeIndex],
+                    hasRisk: false,
+                    riskType: null,
+                });
+                practiceNextImage();
             }
         }
+
         // リスクタイプ選択関数を修正
         function practiceSelectRiskType(riskType) {
                  // ボタンのスタイルをリセット
@@ -853,16 +855,20 @@
         }
         
         function practiceNextImage() {
-            
-            
-            currentImageIndex++;
-            
-            if (currentImageIndex < totalImages) {
+            currentPracticeIndex++;
+            if (currentPracticeIndex < totalPracticeImages) {
                 practiceShowCurrentImage();
             } else {
-                completeImageEvaluation();
+                completePractice();
             }
         }
+
+        function completePractice() {
+                document.getElementById('practice').style.display = 'none';
+                document.getElementById('practice-complete').style.display = 'block';
+            }
+
+
         
         // 画像評価完了
         function completeImageEvaluation() {
