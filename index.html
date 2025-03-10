@@ -187,6 +187,14 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+         .practice-mode {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
 
     </style>
 </head>
@@ -199,52 +207,108 @@
             <button class="btn btn-primary" onclick="checkPassword()">送信</button>
         </div>
     </div>
+    
     <div id="experiment-content" class="hidden">
         <div class="container">
             <h1>リスク評価実験</h1>
+            
             <div id="instructions">
                 <h2>実験の手順</h2>
                 <p>1. 表示される20枚の画像を一枚ずつ評価します。</p>
                 <p>2. 各画像について、事故リスクを感じるかどうかを選択してください。</p>
                 <p>3. リスクを感じる場合は、「切り傷」「火事」「転倒」のうち最も強く感じるリスクを選択してください。</p>
                 <p>4. すべての画像を評価した後、リスクを感じた画像の中から最もリスクが高いと感じる上位3つを選択していただきます。</p>
-                <button class="btn btn-primary" onclick="startExperiment()">実験を開始する</button>
+                <p><strong>まずは練習として4枚の画像で操作に慣れていただきます。</strong></p>
+                <button class="btn btn-primary" onclick="startPractice()">練習を開始する</button>
             </div>
-    <div id="experiment" style="display: none;">
-            <div class="progress">
-                <div id="progress-bar" class="progress-bar" style="width: 0%">0/20</div>
-            </div>
-            <div class="image-container">
-                <img id="current-image" src="" alt="評価画像">
-            </div>
-            <div class="controls">
-                <div>
-                    <p>この画像から事故リスクを感じますか？</p>
-                    <button class="btn btn-primary" onclick="selectRisk(true)">はい、リスクを感じる</button>
-                    <button class="btn btn-secondary" onclick="selectRisk(false)">いいえ、リスクを感じない</button>
-                    <button class="btn btn-neutral" onclick="previousImage()" id="prev-button" style="display: none;">前の画像に戻る</button>
+            
+            <div id="practice" style="display: none;">
+                <div class="practice-mode">
+                    <strong>練習モード</strong> - 操作に慣れるための練習です
                 </div>
-                <div id="risk-types" class="risk-types">
-                    <p>どのようなリスクを最も強く感じますか？</p>
-                    <button class="btn btn-neutral" onclick="selectRiskType('切り傷')">切り傷</button>
-                    <button class="btn btn-neutral" onclick="selectRiskType('火事')">火事</button>
-                    <button class="btn btn-neutral" onclick="selectRiskType('転倒')">転倒</button>
-                    <p class="risk-type-hint" style="margin-top: 10px; font-size: 0.9em;">
-                        選択後、「リスクタイプを確定」ボタンを押してください。確定するまでは何度でも選び直せます。
-                    </p>
+                
+                <div class="progress">
+                    <div id="practice-progress-bar" class="progress-bar" style="width: 0%">0/4</div>
                 </div>
-                <div id="risk-drawing" class="risk-drawing" style="display: none;">
-                    <p>リスクを感じる部分を円で囲んでください。</p>
-                    <div class="canvas-container">
-                        <canvas id="drawing-canvas" style="border:1px solid #000; cursor: crosshair;"></canvas>
+                
+                <div class="image-container">
+                    <img id="practice-image" src="" alt="練習用画像">
+                </div>
+                
+                <div class="controls">
+                    <div>
+                        <p>この画像から事故リスクを感じますか？</p>
+                        <button class="btn btn-primary" onclick="practiceSelectRisk(true)">はい、リスクを感じる</button>
+                        <button class="btn btn-secondary" onclick="practiceSelectRisk(false)">いいえ、リスクを感じない</button>
+                        <button class="btn btn-neutral" onclick="practicePreviousImage()" id="practice-prev-button" style="display: none;">前の画像に戻る</button>
                     </div>
-                    <div class="drawing-controls">
-                        <button class="btn btn-secondary" onclick="clearDrawing()">クリア</button>
-                        <button class="btn btn-primary" onclick="confirmDrawing()">確定</button>
+                    
+                    <div id="practice-risk-types" class="risk-types">
+                        <p>どのようなリスクを最も強く感じますか？</p>
+                        <button class="btn btn-neutral" onclick="practiceSelectRiskType('切り傷')">切り傷</button>
+                        <button class="btn btn-neutral" onclick="practiceSelectRiskType('火事')">火事</button>
+                        <button class="btn btn-neutral" onclick="practiceSelectRiskType('転倒')">転倒</button>
+                        <p class="risk-type-hint" style="margin-top: 10px; font-size: 0.9em;">
+                            選択後、「リスクタイプを確定」ボタンを押してください。確定するまでは何度でも選び直せます。
+                        </p>
+                    </div>
+                    
+                    <div id="practice-risk-drawing" class="risk-drawing">
+                        <p>リスクを感じる部分を囲んでください。</p>
+                        <div class="canvas-container">
+                            <canvas id="practice-drawing-canvas" style="border:1px solid #000; cursor: crosshair;"></canvas>
+                        </div>
+                        <div class="drawing-controls">
+                            <button class="btn btn-secondary" onclick="practiceClearDrawing()">クリア</button>
+                            <button class="btn btn-primary" onclick="practiceConfirmDrawing()">確定</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>            
+            
+            <div id="practice-complete" style="display: none;">
+                <h2>練習完了</h2>
+                <p>お疲れ様でした。練習は以上です。</p>
+                <p>次は本番の実験に進みます。全部で20枚の画像を評価していただきます。</p>
+                <button class="btn btn-primary" onclick="startExperiment()">本番実験を開始する</button>
+            </div>
+            
+            <div id="experiment" style="display: none;">
+                <div class="progress">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0/20</div>
+                </div>
+                <div class="image-container">
+                    <img id="current-image" src="" alt="評価画像">
+                </div>
+                <div class="controls">
+                    <div>
+                        <p>この画像から事故リスクを感じますか？</p>
+                        <button class="btn btn-primary" onclick="selectRisk(true)">はい、リスクを感じる</button>
+                        <button class="btn btn-secondary" onclick="selectRisk(false)">いいえ、リスクを感じない</button>
+                        <button class="btn btn-neutral" onclick="previousImage()" id="prev-button" style="display: none;">前の画像に戻る</button>
+                    </div>
+                    <div id="risk-types" class="risk-types">
+                        <p>どのようなリスクを最も強く感じますか？</p>
+                        <button class="btn btn-neutral" onclick="selectRiskType('切り傷')">切り傷</button>
+                        <button class="btn btn-neutral" onclick="selectRiskType('火事')">火事</button>
+                        <button class="btn btn-neutral" onclick="selectRiskType('転倒')">転倒</button>
+                        <p class="risk-type-hint" style="margin-top: 10px; font-size: 0.9em;">
+                            選択後、「リスクタイプを確定」ボタンを押してください。確定するまでは何度でも選び直せます。
+                        </p>
+                    </div>
+                    <div id="risk-drawing" class="risk-drawing" style="display: none;">
+                        <p>リスクを感じる部分を円で囲んでください。</p>
+                        <div class="canvas-container">
+                            <canvas id="drawing-canvas" style="border:1px solid #000; cursor: crosshair;"></canvas>
+                        </div>
+                        <div class="drawing-controls">
+                            <button class="btn btn-secondary" onclick="clearDrawing()">クリア</button>
+                            <button class="btn btn-primary" onclick="confirmDrawing()">確定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div id="ranking" class="ranking-container">
                 <h2>リスクランキング</h2>
                 <p>リスクを感じると評価した画像の中から、最もリスクが高いと感じる上位3つを順番に選択してください。</p>
@@ -253,19 +317,22 @@
                     <!-- リスクを感じた画像がここに表示されます -->
                 </div>
                 <button id="complete-ranking" class="btn btn-primary" disabled>ランキングを確定する</button>
-                 <button class="btn btn-neutral" onclick="restartImageEvaluation()">評価をやり直す</button>
+                <button class="btn btn-neutral" onclick="restartImageEvaluation()">評価をやり直す</button>
             </div>
+            
             <div id="results" class="results">
-            <h2>実験結果</h2>
-            <p>ご協力ありがとうございました。以下があなたの回答です：</p>
-            <div id="result-content"></div>
-                    <button class="btn btn-primary" onclick="downloadAndSubmitResults()">結果を送信する</button>
-    <button class="btn btn-neutral" onclick="restartRanking()">ランキングをやり直す</button>
-        </div>
+                <h2>実験結果</h2>
+                <p>ご協力ありがとうございました。以下があなたの回答です：</p>
+                <div id="result-content"></div>
+                <button class="btn btn-primary" onclick="downloadAndSubmitResults()">結果を送信する</button>
+                <button class="btn btn-neutral" onclick="restartRanking()">ランキングをやり直す</button>
+            </div>
+            
             <div id="loading" class="loading" style="display: none;">
-    <div class="spinner"></div>
-    <p>データを送信中です。しばらくお待ちください...</p>
-</div>
+                <div class="spinner"></div>
+                <p>データを送信中です。しばらくお待ちください...</p>
+            </div>
+        </div>
     </div>
     <script>
         // 実験用の変数
@@ -276,6 +343,12 @@
         let riskImages = [];
         let rankings = [null, null, null];
         let currentRankingPosition = 0;
+
+        // 練習用の変数
+        const totalPracticeImages = 4;
+        let currentPracticeIndex = 0;
+        let practiceImages = [];
+        let practiceResponses = [];
         
         // パスワード確認
         function checkPassword() {
@@ -288,7 +361,30 @@
                 alert("パスワードが正しくありません。");
             }
         }
-        
+        // 練習開始
+        function startPractice() {
+            document.getElementById('instructions').style.display = 'none';
+            document.getElementById('practice').style.display = 'block';
+            
+            // 練習用画像のURLを設定
+            const practiceFilenames = [
+                'practice1.jpg',
+                'practice2.jpg',
+                'practice3.jpg',
+                'practice4.jpg'
+            ];
+            
+            // 練習用画像のURLを設定
+            for (let i = 0; i < practiceFilenames.length; i++) {
+                practiceImages.push(`practice/${practiceFilenames[i]}`);
+            }
+            
+            // 練習用画像をランダムに並び替え
+            shuffleArray(practiceImages);
+            
+            // 最初の練習用画像を表示
+            showCurrentPracticeImage();
+        }
         // 実験開始
         function startExperiment() {
             document.getElementById('instructions').style.display = 'none';
