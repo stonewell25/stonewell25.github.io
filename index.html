@@ -243,7 +243,6 @@
                         <button class="btn btn-neutral" onclick="practiceSelectRiskType('転倒')">転倒</button>
                         <button class="btn btn-neutral" onclick="practiceSelectRiskType('ものを踏みそう')">ものを踏みそう</button>
                         <button class="btn btn-neutral" onclick="practiceSelectRiskType('ものが落ちそう')">ものが落ちそう</button>
-                        <!-- 理由入力エリアを追加 -->
                         <div id="practice-risk-reason" style="display: none; margin-top: 15px;">
                             <p>なぜそのリスクを感じましたか？</p>
                             <textarea id="practice-risk-reason-text" rows="3" style="width: 100%; padding: 8px;"></textarea>
@@ -436,12 +435,12 @@
         }
         // 前の画像に戻る
         function practicePreviousImage() {
-            if (currentImageIndex > 0) {
-                currentImageIndex--;
+            if (currentPracticeIndex > 0) {
+                currentPracticeIndex--;
                 // 最後の回答を削除
                 responses.pop();
                 // 最後にリスクを感じた画像だった場合、riskImagesからも削除
-                const lastImageUrl = images[currentImageIndex];
+                const lastImageUrl = images[currentPracticeIndex];
                 const riskImageIndex = riskImages.indexOf(lastImageUrl);
                 if (riskImageIndex !== -1) {
                     riskImages.splice(riskImageIndex, 1);
@@ -623,7 +622,7 @@
             // リスクを感じる場合は描画画面を表示
             document.getElementById('practice-risk-types').style.display = 'none';
             document.getElementById('practice-risk-drawing').style.display = 'block';
-            setupCanvas();
+            practiceSetupCanvas();
             
             // 選択をリセット
             window.selectedRiskType = null;
@@ -653,7 +652,6 @@
         // リスクタイプ選択関数を修正
         function selectRiskType(riskType) {
                  // ボタンのスタイルをリセット
-                
                 const typeButtons = document.querySelectorAll('#risk-types .btn-neutral');
                 
              // 選択されたボタンを強調表示
@@ -683,7 +681,7 @@
         function confirmRiskType() {
             if (!window.selectedRiskType) return;
             // テキストエリアから理由を取得
-            const riskReason = document.getElementById('practice-risk-reason-text').value;
+            const riskReason = document.getElementById('risk-reason-text').value;
     
             responses.push({
                 imageUrl: images[currentImageIndex],
