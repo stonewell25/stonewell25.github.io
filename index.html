@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>**リスク評価実験</title>
+    <title>リスク評価実験</title>
     <style>
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -210,7 +210,6 @@
     <div id="experiment-content" class="hidden">
         <div class="container">
             <h1>リスク評価実験</h1>
-            
             <div id="instructions">
                 <h2>実験の手順</h2>
                 <p>1. 表示される20枚の画像を一枚ずつ評価します。</p>
@@ -220,12 +219,10 @@
                 <p><strong>まずは練習として4枚の画像で操作に慣れていただきます。</strong></p>
                 <button class="btn btn-primary" onclick="startPractice()">練習を開始する</button>
             </div>
-            
             <div id="practice" style="display: none;">
                 <div class="practice-mode">
                     <strong>練習モード</strong> - 操作に慣れるための練習です
                 </div>
-                
                 <div class="progress">
                     <div id="practice-progress-bar" class="progress-bar" style="width: 0%">0/4</div>
                 </div>
@@ -239,7 +236,6 @@
                         <button class="btn btn-secondary" onclick="practiceSelectRisk(false)">いいえ、リスクを感じない</button>
                         <button class="btn btn-neutral" onclick="practicePreviousImage()" id="practice-prev-button" style="display: none;">前の画像に戻る</button>
                     </div>
-                    
                     <div id="practice-risk-types" class="risk-types">
                         <p>どのようなリスクを最も強く感じますか？</p>
                         <button class="btn btn-neutral" onclick="practiceSelectRiskType('切り傷')">切り傷</button>
@@ -249,7 +245,6 @@
                             選択後、「リスクタイプを確定」ボタンを押してください。確定するまでは何度でも選び直せます。
                         </p>
                     </div>
-                    
                     <div id="practice-risk-drawing" class="risk-drawing">
                         <p>リスクを感じる部分を囲んでください。</p>
                         <div class="canvas-container">
