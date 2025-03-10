@@ -243,7 +243,6 @@
                         <button class="btn btn-neutral" onclick="practiceSelectRiskType('転倒')">転倒</button>
                         <button class="btn btn-neutral" onclick="practiceSelectRiskType('ものを踏みそう')">ものを踏みそう</button>
                         <button class="btn btn-neutral" onclick="practiceSelectRiskType('ものが落ちそう')">ものが落ちそう</button>
-                        <button class="btn btn-neutral" onclick="practiceSelectRiskType('その他')">その他</button>
                         <p class="risk-type-hint" style="margin-top: 10px; font-size: 0.9em;">
                             選択後、「リスクタイプを確定」ボタンを押してください。確定するまでは何度でも選び直せます。
                         </p>
@@ -301,7 +300,6 @@
                     </div>
                 </div>
             </div>
-            
             <div id="ranking" class="ranking-container">
                 <h2>リスクランキング</h2>
                 <p>リスクを感じると評価した画像の中から、最もリスクが高いと感じる上位3つを順番に選択してください。</p>
@@ -319,7 +317,6 @@
                 <button class="btn btn-primary" onclick="downloadAndSubmitResults()">結果を送信する</button>
                 <button class="btn btn-neutral" onclick="restartRanking()">ランキングをやり直す</button>
             </div>
-            
             <div id="loading" class="loading" style="display: none;">
                 <div class="spinner"></div>
                 <p>データを送信中です。しばらくお待ちください...</p>
@@ -340,7 +337,6 @@
         let currentPracticeIndex = 0;
         let practiceImages = [];
         let practiceResponses = [];
-        
         // パスワード確認
         function checkPassword() {
             const password = document.getElementById('password-input').value;
