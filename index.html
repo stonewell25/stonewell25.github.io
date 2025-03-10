@@ -290,7 +290,6 @@
                         <button class="btn btn-neutral" onclick="selectRiskType('人が転ぶ')">人が転ぶ</button>
                         <button class="btn btn-neutral" onclick="selectRiskType('ものが落ちそう')">ものが落ちそう</button>
                         <button class="btn btn-neutral" onclick="selectRiskType('その他')">その他</button>
-                        <!-- 理由入力エリアを追加 -->
                         <div id="risk-reason" style="display: none; margin-top: 15px;">
                             <p>なぜそのリスクを感じましたか？（何も書かなくても『確定』を押すと先に進めます。）</p>
                             <textarea id="risk-reason-text" rows="3" style="width: 100%; padding: 8px;"></textarea>
@@ -919,14 +918,10 @@
                 completePractice();
             }
         }
-
         function completePractice() {
                 document.getElementById('practice').style.display = 'none';
                 document.getElementById('practice-complete').style.display = 'block';
             }
-
-
-        
         // 画像評価完了
         function completeImageEvaluation() {
             document.getElementById('experiment').style.display = 'none';
@@ -953,7 +948,6 @@
             }
         }
         
-        // ランキング選択
         // ランキング選択
         function selectRanking(imgElement) {
             const index = parseInt(imgElement.dataset.index);
@@ -1107,8 +1101,6 @@
             // Google Apps Scriptにデータを送信
             submitToGoogleSheet(results);
         }
-
-
         
     </script>
 </body>
