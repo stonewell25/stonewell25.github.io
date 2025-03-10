@@ -462,17 +462,22 @@
         }
         // 画像評価をやり直す
         function restartImageEvaluation() {
-            // 変数をリセット
-            currentImageIndex = 0;
-            responses = [];
-            riskImages = [];
-            
-            // 画像評価画面を表示
-            document.getElementById('ranking').style.display = 'none';
-            document.getElementById('experiment').style.display = 'block';
-            
-            // 最初の画像を表示
-            showCurrentImage();
+            // 確認ポップアップを表示
+            if (confirm("本当に評価をリセットしますか？これまでの回答がすべて消去されます。")) {
+                // ユーザーが「OK」を選択した場合のみリセット処理を実行
+                
+                // 変数をリセット
+                currentImageIndex = 0;
+                responses = [];
+                riskImages = [];
+                
+                // 画像評価画面を表示
+                document.getElementById('ranking').style.display = 'none';
+                document.getElementById('experiment').style.display = 'block';
+                
+                // 最初の画像を表示
+                showCurrentImage();
+            }
         }
         // ランキングをやり直す
         function restartRanking() {
