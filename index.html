@@ -611,13 +611,6 @@
             // テキストエリアから理由を取得
             const riskReason = document.getElementById('practice-risk-reason-text').value;
             
-            practiceResponses.push({
-                imageUrl: practiceImages[currentPracticeIndex],
-                hasRisk: true,
-                riskType: window.selectedRiskType,
-                riskReason: riskReason // 理由を追加
-            });
-            
             // リスクを感じる場合は描画画面を表示
             document.getElementById('practice-risk-types').style.display = 'none';
             document.getElementById('practice-risk-drawing').style.display = 'block';
@@ -688,8 +681,7 @@
                 riskType: window.selectedRiskType,
                 riskReason: riskReason // 理由を追加
             });
-            // リスク理由入力エリアを表示
-            document.getElementById('risk-reason').style.display = 'block';
+
             // リスクを感じた画像を保存
             riskImages.push(images[currentImageIndex]);
             
