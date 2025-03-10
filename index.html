@@ -376,14 +376,14 @@
             
             // 練習用画像のURLを設定
             for (let i = 0; i < practiceFilenames.length; i++) {
-                practiceImages.push(`practice/${practiceFilenames[i]}`);
+                practiceImages.push(`/practice/${practiceFilenames[i]}`);
             }
-            
+       
             // 練習用画像をランダムに並び替え
             shuffleArray(practiceImages);
             
             // 最初の練習用画像を表示
-            showCurrentPracticeImage();
+            showCurrentImage();
         }
         // 実験開始
         function startExperiment() {
