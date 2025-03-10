@@ -888,7 +888,6 @@
             nextImage();
             // リスクタイプ選択画面を表示
             document.getElementById('risk-drawing').style.display = 'none';
-
         }
         // 次の画像へ
         function nextImage() {
@@ -956,12 +955,10 @@
                 if (existingBadge) {
                     existingBadge.remove();
                 }
-                
                 // ランキングステータスを更新
                 updateRankingStatus();
                 return;
             }
-            
             // 現在の順位に画像を設定
             rankings[currentRankingPosition] = index;
             
