@@ -383,7 +383,7 @@
             shuffleArray(practiceImages);
             
             // 最初の練習用画像を表示
-            showCurrentImage();
+            practiceShowCurrentImage();
         }
         // 実験開始
         function startExperiment() {
@@ -505,6 +505,23 @@
 
         
         // 現在の画像を表示
+        function practiceShowCurrentImage() {
+            document.getElementById('current-image').src = images[currentImageIndex];
+            document.getElementById('progress-bar').style.width = `${(currentImageIndex / totalImages) * 100}%`;
+            document.getElementById('progress-bar').textContent = `${currentImageIndex + 1}/${totalImages}`;
+            document.getElementById('practice-risk-types').style.display = 'none';
+            document.getElementById('practice-risk-drawing').style.display = 'none';
+            // リスクタイプ選択ボタンのクラスをリセット
+            const typeButtons = document.querySelectorAll('#practice-risk-types .btn-neutral, #practice-risk-types button');
+            typeButtons.forEach(button => {
+                button.classList.remove('btn-selected', 'btn-unselected');
+                if (!button.classList.contains('btn-neutral') && button.id !== 'practice-confirm-risk-type') {
+                    button.classList.add('btn-neutral');
+                }
+            });  
+            // 「前の画像に戻る」ボタンの表示/非表示を更新
+            updatePrevButton();
+        }
         function showCurrentImage() {
             document.getElementById('current-image').src = images[currentImageIndex];
             document.getElementById('progress-bar').style.width = `${(currentImageIndex / totalImages) * 100}%`;
@@ -659,8 +676,6 @@
             window.selectedRiskType = null;
             //const typeButtons = document.querySelectorAll('#risk-types .btn-neutral');
         }
-    
-        
         // キャンバスのセットアップ
         function setupCanvas() {
             
