@@ -244,7 +244,7 @@
                         <button class="btn btn-neutral" onclick="practiceSelectRiskType('ものが落ちそう')">ものが落ちそう</button>
                         <button class="btn btn-neutral" onclick="practiceSelectRiskType('その他')">その他</button>
                         <div id="practice-risk-reason" style="display: none; margin-top: 15px;">
-                            <p>なぜそのリスクを感じましたか？(何も書かなくても『確定』を押すと先に進めます。)</p>
+                        <p>なぜそのリスクを感じましたか？(何も書かなくても『確定』を押すと先に進めます。)</p>
                             <textarea id="practice-risk-reason-text" rows="3" style="width: 100%; padding: 8px;"></textarea>
                         </div>
                         <p class="risk-type-hint" style="margin-top: 10px; font-size: 0.9em;">
@@ -412,7 +412,6 @@
                 'trip_421.jpg',
                 'trip_444.jpg'
             ];
-                        
             // 画像のURLを設定（実際の画像URLに置き換えてください）
             for (let i = 0; i < imageFilenames.length; i++) {
                 images.push(`/evaluation/${imageFilenames[i]}`);
@@ -437,7 +436,7 @@
             if (currentPracticeIndex > 0) {
                 currentPracticeIndex--;
                 // 最後の回答を削除
-                responses.pop();
+                practiceResponses.pop();
                 // 最後にリスクを感じた画像だった場合、riskImagesからも削除
                 const lastImageUrl = images[currentPracticeIndex];
                 const riskImageIndex = riskImages.indexOf(lastImageUrl);
@@ -604,7 +603,7 @@
                     document.getElementById('practice-risk-types').appendChild(confirmButton);
                 }
 
-            }
+        }
         function practiceConfirmRiskType() {
             if (!window.selectedRiskType) return;
             
