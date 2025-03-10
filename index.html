@@ -256,20 +256,18 @@
                             <canvas id="practice-drawing-canvas" style="border:1px solid #000; cursor: crosshair;"></canvas>
                         </div>
                         <div class="drawing-controls">
-                            <button class="btn btn-secondary" onclick="clearDrawing()">クリア</button>
+                            <button class="btn btn-secondary" onclick="practiceClearDrawing()">クリア</button>
                             <button class="btn btn-primary" onclick="practiceConfirmDrawing()">確定</button>
                         </div>
                     </div>
                 </div>
             </div>
-            
             <div id="practice-complete" style="display: none;">
                 <h2>練習完了</h2>
                 <p>お疲れ様でした。練習は以上です。</p>
                 <p>次は本番の実験に進みます。全部で20枚の画像を評価していただきます。</p>
                 <button class="btn btn-primary" onclick="startExperiment()">本番実験を開始する</button>
             </div>
-            
             <div id="experiment" style="display: none;">
                 <div class="progress">
                     <div id="progress-bar" class="progress-bar" style="width: 0%">0/20</div>
@@ -814,6 +812,17 @@
             canvas.dispatchEvent(mouseEvent);
         }
         // 描画をクリア
+        function practiceClearDrawing() {
+            // キャンバスをクリア
+            const img = document.getElementById('practice-image');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            // 変数をリセット
+            points = [];
+            currentPath = null;
+            hasDrawn = false;
+        }
         function clearDrawing() {
             // キャンバスをクリア
             const img = document.getElementById('current-image');
