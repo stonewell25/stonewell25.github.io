@@ -240,7 +240,7 @@
                         <p>この画像から事故リスクを感じますか？</p>
                         <button class="btn btn-primary" onclick="practiceSelectRisk(true)">はい、リスクを感じる</button>
                         <button class="btn btn-secondary" onclick="practiceSelectRisk(false)">いいえ、リスクを感じない</button>
-                        <button class="btn btn-neutral" onclick="PreviousImage()" id="practice-prev-button" style="display: none;">前の画像に戻る</button>
+                        <button class="btn btn-neutral" onclick="practicePreviousImage()" id="practice-prev-button" style="display: none;">前の画像に戻る</button>
                     </div>
                     
                     <div id="practice-risk-types" class="risk-types">
@@ -435,6 +435,20 @@
         }
 
         // 前の画像に戻る
+        function practicePreviousImage() {
+            if (currentImageIndex > 0) {
+                currentImageIndex--;
+                // 最後の回答を削除
+                responses.pop();
+                // 最後にリスクを感じた画像だった場合、riskImagesからも削除
+                const lastImageUrl = images[currentImageIndex];
+                const riskImageIndex = riskImages.indexOf(lastImageUrl);
+                if (riskImageIndex !== -1) {
+                    riskImages.splice(riskImageIndex, 1);
+                }
+                practiceShowCurrentImage();
+            }
+        }
         function previousImage() {
             if (currentImageIndex > 0) {
                 currentImageIndex--;
@@ -506,7 +520,7 @@
         
         // 現在の画像を表示
         function practiceShowCurrentImage() {
-            document.getElementById('current-image').src = images[currentImageIndex];
+            document.getElementById('practice-image').src = images[currentImageIndex];
             document.getElementById('progress-bar').style.width = `${(currentImageIndex / totalImages) * 100}%`;
             document.getElementById('progress-bar').textContent = `${currentImageIndex + 1}/${totalImages}`;
             document.getElementById('practice-risk-types').style.display = 'none';
@@ -839,6 +853,18 @@
             
             if (currentImageIndex < totalImages) {
                 showCurrentImage();
+            } else {
+                completeImageEvaluation();
+            }
+        }
+        
+        function practiceNextImage() {
+            
+            
+            currentImageIndex++;
+            
+            if (currentImageIndex < totalImages) {
+                practiceShowCurrentImage();
             } else {
                 completeImageEvaluation();
             }
