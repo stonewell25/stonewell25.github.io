@@ -375,8 +375,10 @@
         }
         // 実験開始
         function startExperiment() {
+            document.getElementById('practice').style.display = 'none';
             document.getElementById('instructions').style.display = 'none';
             document.getElementById('experiment').style.display = 'block';
+            document.getElementById('practice-complete').style.display = 'none';
             
             // 画像ファイル名の配列
             const imageFilenames = [
