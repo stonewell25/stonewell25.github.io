@@ -610,14 +610,25 @@
         function practiceConfirmRiskType() {
             if (!window.selectedRiskType) return;
             
+            // テキストエリアから理由を取得
+            const riskReason = document.getElementById('practice-risk-reason-text').value;
+            
+            practiceResponses.push({
+                imageUrl: practiceImages[currentPracticeIndex],
+                hasRisk: true,
+                riskType: window.selectedRiskType,
+                riskReason: riskReason // 理由を追加
+            });
+            
             // リスクを感じる場合は描画画面を表示
             document.getElementById('practice-risk-types').style.display = 'none';
             document.getElementById('practice-risk-drawing').style.display = 'block';
-            practiceSetupCanvas();
+            setupCanvas();
             
             // 選択をリセット
             window.selectedRiskType = null;
-            //const typeButtons = document.querySelectorAll('#risk-types .btn-neutral');
+            document.getElementById('practice-risk-reason-text').value = ''; // テキストエリアをクリア
+            document.getElementById('practice-risk-reason').style.display = 'none'; // 理由入力エリアを非表示
         }
     
         // リスク選択関数を修正
@@ -671,11 +682,14 @@
             }
         function confirmRiskType() {
             if (!window.selectedRiskType) return;
-            
+            // テキストエリアから理由を取得
+            const riskReason = document.getElementById('practice-risk-reason-text').value;
+    
             responses.push({
                 imageUrl: images[currentImageIndex],
                 hasRisk: true,
-                riskType: window.selectedRiskType
+                riskType: window.selectedRiskType,
+                riskReason: riskReason // 理由を追加
             });
             // リスク理由入力エリアを表示
             document.getElementById('risk-reason').style.display = 'block';
@@ -689,6 +703,8 @@
             
             // 選択をリセット
             window.selectedRiskType = null;
+            document.getElementById('risk-reason-text').value = ''; // テキストエリアをクリア
+            document.getElementById('risk-reason').style.display = 'none'; // 理由入力エリアを非表示
             //const typeButtons = document.querySelectorAll('#risk-types .btn-neutral');
         }
         // キャンバスのセットアップ
